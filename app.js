@@ -183,10 +183,9 @@ function buildBestBallTable(day, holesSubset, startIdx, resultCellRefs) {
   players.forEach((p) => {
     const row = document.createElement('tr');
     const label = document.createElement('td');
-    label.className = 'player-label';
     const team = day.bestBall.teamA.includes(p) ? 'A' : 'B';
+    label.className = 'player-label ' + (team === 'A' ? 'label-team-a' : 'label-team-b');
     label.textContent = p;
-    label.style.color = team === 'A' ? 'var(--team-a)' : 'var(--team-b)';
     row.appendChild(label);
     holesSubset.forEach((h, i) => {
       const idx = startIdx + i;
@@ -228,11 +227,11 @@ function buildSinglesTable(day, holesSubset, startIdx, resultCellRefs) {
   players.forEach((p) => {
     const row = document.createElement('tr');
     const label = document.createElement('td');
-    label.className = 'player-label';
+    let labelClass = 'label-jov';
+    if (p === day.singles.a) labelClass = 'label-team-a';
+    else if (p === day.singles.b) labelClass = 'label-team-b';
+    label.className = 'player-label ' + labelClass;
     label.textContent = p;
-    if (p === day.singles.a) label.style.color = 'var(--team-a)';
-    else if (p === day.singles.b) label.style.color = 'var(--team-b)';
-    else label.style.color = 'var(--push)';
     row.appendChild(label);
     holesSubset.forEach((h, i) => {
       const idx = startIdx + i;

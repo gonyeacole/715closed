@@ -176,6 +176,21 @@ table.holes td.player-label, table.holes th.player-label {
   background: #fafcf9;
 }
 
+table.holes td.label-team-a {
+  background: var(--team-a);
+  color: #fff;
+}
+
+table.holes td.label-team-b {
+  background: var(--team-b);
+  color: #fff;
+}
+
+table.holes td.label-jov {
+  background: var(--push);
+  color: #fff;
+}
+
 table.holes input {
   width: 32px;
   text-align: center;
