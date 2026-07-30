@@ -447,15 +447,16 @@ function resultCellClassAndLabel(status) {
   return ['res-pending', ''];
 }
 
-const SCORE_REL_CLASSES = ['score-eagle', 'score-birdie', 'score-par', 'score-bogey', 'score-double'];
+const SCORE_REL_CLASSES = ['score-eagle', 'score-birdie', 'score-bogey'];
 
+// Eagle-or-better -> yellow circle, birdie -> blue circle, par -> untouched,
+// bogey-or-worse -> red square (classic scorecard marks).
 function scoreRelClass(score, par) {
   const diff = score - par;
   if (diff <= -2) return 'score-eagle';
   if (diff === -1) return 'score-birdie';
-  if (diff === 0) return 'score-par';
-  if (diff === 1) return 'score-bogey';
-  return 'score-double';
+  if (diff >= 1) return 'score-bogey';
+  return null;
 }
 
 // Colors each score input relative to par (birdie, bogey, etc.) for the
@@ -469,7 +470,8 @@ function updateScoreStyles(day) {
     const val = numOrNull(state.days[day.id][matchType].holes[idx][player]);
     input.classList.remove(...SCORE_REL_CLASSES);
     if (val !== null) {
-      input.classList.add(scoreRelClass(val, day.par[idx]));
+      const cls = scoreRelClass(val, day.par[idx]);
+      if (cls) input.classList.add(cls);
     }
   });
 }
