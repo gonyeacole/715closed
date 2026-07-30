@@ -145,18 +145,14 @@ async function initFirebase() {
 function setSyncStatus(status) {
   const indicator = document.getElementById('syncIndicator');
   const main = document.getElementById('syncMain');
-  const sub = document.getElementById('syncSub');
-  if (!indicator || !main || !sub) return;
+  if (!indicator || !main) return;
   indicator.className = 'sync-indicator sync-' + status;
   if (status === 'live') {
     main.textContent = 'Live';
-    sub.textContent = 'Synced with everyone';
   } else if (status === 'connecting') {
     main.textContent = 'Connecting';
-    sub.textContent = 'Setting up sync…';
   } else {
     main.textContent = 'Offline';
-    sub.textContent = 'Saved on this device';
   }
 }
 

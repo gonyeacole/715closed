@@ -115,14 +115,6 @@ body {
   color: #cbd3e0;
 }
 
-.sync-sub {
-  font-size: 0.6rem;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.55);
-}
-
 .sync-indicator.sync-live .sync-dot {
   background: #3ecf6e;
   animation: live-pulse 1.6s ease-in-out infinite;
