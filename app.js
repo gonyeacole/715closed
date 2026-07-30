@@ -385,7 +385,7 @@ function renderScoreboard() {
   if (beerEvents.length === 0) {
     const p = document.createElement('p');
     p.className = 'beer-empty';
-    p.textContent = 'No pushes yet. Watch out, singles guys.';
+    p.textContent = 'No pushes yet.';
     beerList.appendChild(p);
   } else {
     beerEvents.forEach((ev) => {
