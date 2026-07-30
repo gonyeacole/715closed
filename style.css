@@ -4,7 +4,7 @@
   --navy-light: #e8ecf5;
   --team-a: #2f6fed;
   --team-b: #d63a3a;
-  --ink: #1a1f1a;
+  --ink: #101d35;
   --muted: #6b7570;
   --border: #d9dfe8;
   --push: #b98900;
@@ -149,7 +149,7 @@ body {
   border: 1px solid var(--border);
   cursor: pointer;
   font-weight: 600;
-  color: var(--muted);
+  color: var(--ink);
   font-size: 0.85rem;
 }
 
@@ -264,7 +264,7 @@ main {
 .match-sub {
   margin: 0;
   font-size: 0.8rem;
-  color: var(--muted);
+  color: var(--ink);
 }
 
 .match-scoreline {
@@ -297,7 +297,7 @@ main {
 
 .chip-a { color: var(--team-a); }
 .chip-b { color: var(--team-b); }
-.chip-sep { color: var(--muted); font-size: 1.1rem; font-weight: 400; }
+.chip-sep { color: var(--ink); font-size: 1.1rem; font-weight: 400; }
 
 .match-toggle {
   display: block;
@@ -433,7 +433,7 @@ tr.result-row td {
 
 .res-a { background: #eaf1ff; color: var(--team-a); }
 .res-b { background: #fceaea; color: var(--team-b); }
-.res-halve { background: #f4f4f0; color: var(--muted); }
+.res-halve { background: #f4f4f0; color: var(--ink); }
 .res-push { background: #fff6dd; color: var(--push); }
 .res-pending { background: #fff; color: #cfd6cf; }
 
@@ -446,7 +446,7 @@ tr.result-row td {
 }
 
 .beer-tracker h2 { margin: 0 0 4px; font-size: 1rem; }
-.beer-sub { margin: 0 0 10px; font-size: 0.78rem; color: var(--muted); }
+.beer-sub { margin: 0 0 10px; font-size: 0.78rem; color: var(--ink); }
 
 .beer-list { display: flex; flex-direction: column; gap: 6px; }
 
@@ -458,7 +458,7 @@ tr.result-row td {
   font-size: 0.85rem;
 }
 
-.beer-empty { font-size: 0.85rem; color: var(--muted); }
+.beer-empty { font-size: 0.85rem; color: var(--ink); }
 
 footer {
   text-align: center;
