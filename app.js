@@ -20,6 +20,7 @@ const DAYS = [
     course: 'Ridge',
     bestBall: { teamA: ['Pete', 'Shane'], teamB: ['Jordy', 'Cole'] },
     singles: { a: 'Bush', b: 'Scarr' },
+    par: [4, 4, 5, 4, 4, 3, 5, 3, 4, 4, 4, 3, 4, 5, 4, 5, 3, 4],
   },
   {
     id: 2,
@@ -27,6 +28,7 @@ const DAYS = [
     course: 'Mill',
     bestBall: { teamA: ['Pete', 'Bush'], teamB: ['Cole', 'Scarr'] },
     singles: { a: 'Shane', b: 'Jordy' },
+    par: [4, 3, 5, 3, 5, 3, 4, 4, 4, 4, 3, 4, 4, 4, 4, 4, 3, 5],
   },
   {
     id: 3,
@@ -34,6 +36,7 @@ const DAYS = [
     course: 'Wissota',
     bestBall: { teamA: ['Shane', 'Bush'], teamB: ['Scarr', 'Jordy'] },
     singles: { a: 'Pete', b: 'Cole' },
+    par: [4, 3, 5, 3, 4, 4, 5, 4, 4, 4, 3, 4, 5, 4, 4, 4, 3, 4],
   },
 ];
 
@@ -266,6 +269,22 @@ function holeInput(day, matchType, holeIndex, player, value, inputRefs) {
   return input;
 }
 
+function buildParRow(day, holesSubset, startIdx) {
+  const parRow = document.createElement('tr');
+  parRow.className = 'par-row';
+  const parLabel = document.createElement('td');
+  parLabel.className = 'player-label';
+  parLabel.textContent = 'Par';
+  parRow.appendChild(parLabel);
+  holesSubset.forEach((h, i) => {
+    const idx = startIdx + i;
+    const td = document.createElement('td');
+    td.textContent = day.par[idx];
+    parRow.appendChild(td);
+  });
+  return parRow;
+}
+
 function buildBestBallTable(day, holesSubset, startIdx, resultCellRefs, inputRefs) {
   const table = document.createElement('table');
   table.className = 'holes';
@@ -274,6 +293,7 @@ function buildBestBallTable(day, holesSubset, startIdx, resultCellRefs, inputRef
   const headRow = document.createElement('tr');
   headRow.innerHTML = '<th class="player-label">Hole</th>' + holesSubset.map((h) => `<th>${h}</th>`).join('');
   table.appendChild(headRow);
+  table.appendChild(buildParRow(day, holesSubset, startIdx));
 
   players.forEach((p) => {
     const row = document.createElement('tr');
@@ -318,6 +338,7 @@ function buildSinglesTable(day, holesSubset, startIdx, resultCellRefs, inputRefs
   const headRow = document.createElement('tr');
   headRow.innerHTML = '<th class="player-label">Hole</th>' + holesSubset.map((h) => `<th>${h}</th>`).join('');
   table.appendChild(headRow);
+  table.appendChild(buildParRow(day, holesSubset, startIdx));
 
   players.forEach((p) => {
     const row = document.createElement('tr');
