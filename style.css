@@ -264,7 +264,7 @@ main {
   border-radius: 6px;
   font-size: 0.7rem;
   font-weight: 700;
-  color: var(--push);
+  color: #fff8e6;
 }
 
 .match-thru[hidden] {
