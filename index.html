@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>7-15 Closed &mdash; Golf Tournament Tracker</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <h1>⛳ 7-15 Closed</h1>
+  <div class="scoreboard" id="scoreboard">
+    <div class="team-score team-a">
+      <span class="team-label">Team A</span>
+      <span class="team-points" id="teamAPoints">0</span>
+    </div>
+    <div class="vs">vs</div>
+    <div class="team-score team-b">
+      <span class="team-label">Team B</span>
+      <span class="team-points" id="teamBPoints">0</span>
+    </div>
+  </div>
+  <div class="rosters">
+    <span class="roster-a">Pete &middot; Shane &middot; Bush</span>
+    <span class="roster-b">Cole &middot; Scarr &middot; Jordy</span>
+  </div>
+</header>
+
+<nav class="day-tabs" id="dayTabs"></nav>
+
+<main id="app"></main>
+
+<section class="beer-tracker" id="beerTracker">
+  <h2>🍺 Shotgun Watch</h2>
+  <p class="beer-sub">If Jov beats both singles players on a hole, that hole is pushed and both singles players shotgun a beer.</p>
+  <div id="beerList" class="beer-list"></div>
+</section>
+
+<footer>
+  <button id="resetBtn" class="reset-btn">Reset Tournament</button>
+  <p class="footnote">Scores save automatically on this device.</p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
