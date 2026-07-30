@@ -3,7 +3,7 @@
   --navy: #1e3a63;
   --navy-light: #e8ecf5;
   --team-a: #2f6fed;
-  --team-b: #e0562f;
+  --team-b: #d63a3a;
   --ink: #1a1f1a;
   --muted: #6b7570;
   --border: #d9dfe8;
@@ -25,7 +25,7 @@ body {
 .topbar {
   background: var(--navy-dark);
   color: white;
-  padding: 16px 0 0;
+  padding: 16px 0 12px;
   text-align: center;
   position: sticky;
   top: 0;
@@ -59,7 +59,7 @@ body {
 }
 
 .team-score.team-b {
-  background: linear-gradient(160deg, #f0754f, #b8371a);
+  background: linear-gradient(160deg, #e35a5a, #a11f1f);
 }
 
 .team-points {
@@ -76,6 +76,13 @@ body {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.85);
+}
+
+.team-roster {
+  font-size: 0.66rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  text-align: center;
 }
 
 .score-center {
@@ -138,17 +145,6 @@ body {
   .sync-indicator.sync-live .sync-dot {
     animation: none;
   }
-}
-
-.rosters {
-  margin-top: 12px;
-  padding: 0 16px 16px;
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-  font-size: 0.72rem;
-  opacity: 0.9;
-  flex-wrap: wrap;
 }
 
 .day-tabs {
@@ -423,7 +419,7 @@ tr.result-row td {
 }
 
 .res-a { background: #eaf1ff; color: var(--team-a); }
-.res-b { background: #fff1ea; color: var(--team-b); }
+.res-b { background: #fceaea; color: var(--team-b); }
 .res-halve { background: #f4f4f0; color: var(--muted); }
 .res-push { background: #fff6dd; color: var(--push); }
 .res-pending { background: #fff; color: #cfd6cf; }
