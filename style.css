@@ -141,15 +141,55 @@ main {
   margin-bottom: 12px;
 }
 
-.match-header h2 {
-  margin: 0 0 2px;
+.match-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+.match-title-row h2 {
+  margin: 0;
   font-size: 1.05rem;
+}
+
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #fff;
+  background: #d94848;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.live-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.live-badge[hidden] {
+  display: none;
 }
 
 .match-sub {
   margin: 0;
   font-size: 0.8rem;
   color: var(--muted);
+}
+
+.match-thru {
+  margin: 4px 0 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--green-dark);
 }
 
 .match-score-chip {

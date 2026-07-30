@@ -388,7 +388,16 @@ function buildMatchCardShell(title, subtitleHtml) {
   const header = document.createElement('div');
   header.className = 'match-header';
   const headerText = document.createElement('div');
-  headerText.innerHTML = `<h2>${title}</h2><p class="match-sub">${subtitleHtml}</p>`;
+  headerText.innerHTML = `
+    <div class="match-title-row">
+      <h2>${title}</h2>
+      <span class="live-badge" hidden>Live</span>
+    </div>
+    <p class="match-sub">${subtitleHtml}</p>
+    <p class="match-thru" hidden></p>
+  `;
+  const liveBadge = headerText.querySelector('.live-badge');
+  const thruText = headerText.querySelector('.match-thru');
   const scoreChip = document.createElement('div');
   scoreChip.className = 'match-score-chip';
   const spanA = document.createElement('span');
@@ -421,7 +430,7 @@ function buildMatchCardShell(title, subtitleHtml) {
   card.appendChild(toggleBtn);
   card.appendChild(body);
 
-  return { card, body, spanA, spanB };
+  return { card, body, spanA, spanB, liveBadge, thruText };
 }
 
 function renderMain() {
@@ -470,6 +479,16 @@ function renderMain() {
   app.appendChild(sgShell.card);
 
   refreshDerived(day);
+}
+
+// Shows the "Live" badge once any score has been entered for a match, and
+// a "Thru N" readout counting holes where every required score is in.
+function updateMatchStatus(shell, anyScore, completedHoles) {
+  shell.liveBadge.hidden = !anyScore;
+  shell.thruText.hidden = completedHoles === 0;
+  if (completedHoles > 0) {
+    shell.thruText.textContent = `Thru ${completedHoles}`;
+  }
 }
 
 function resultCellClassAndLabel(status) {
@@ -521,10 +540,14 @@ function refreshDerived(day) {
 
   let bbA = 0;
   let bbB = 0;
+  let bbCompleted = 0;
+  let bbAny = false;
   state.days[day.id].bestBall.holes.forEach((holeData, idx) => {
     const r = bestBallHoleResult(holeData, day.bestBall.teamA, day.bestBall.teamB);
     bbA += r.aPts;
     bbB += r.bPts;
+    if (r.status !== 'pending') bbCompleted += 1;
+    if (Object.keys(holeData).length > 0) bbAny = true;
     const td = refs.bestBallCells[idx];
     if (td) {
       const [cls, label] = resultCellClassAndLabel(r.status);
@@ -534,13 +557,18 @@ function refreshDerived(day) {
   });
   refs.bestBallSummary.spanA.textContent = fmtPts(bbA);
   refs.bestBallSummary.spanB.textContent = fmtPts(bbB);
+  updateMatchStatus(refs.bestBallSummary, bbAny, bbCompleted);
 
   let sgA = 0;
   let sgB = 0;
+  let sgCompleted = 0;
+  let sgAny = false;
   state.days[day.id].singles.holes.forEach((holeData, idx) => {
     const r = singlesHoleResult(holeData, day.singles.a, day.singles.b);
     sgA += r.aPts;
     sgB += r.bPts;
+    if (r.status !== 'pending') sgCompleted += 1;
+    if (Object.keys(holeData).length > 0) sgAny = true;
     const td = refs.singlesCells[idx];
     if (td) {
       const [cls, label] = resultCellClassAndLabel(r.status);
@@ -550,6 +578,7 @@ function refreshDerived(day) {
   });
   refs.singlesSummary.spanA.textContent = fmtPts(sgA);
   refs.singlesSummary.spanB.textContent = fmtPts(sgB);
+  updateMatchStatus(refs.singlesSummary, sgAny, sgCompleted);
 
   updateScoreStyles(day);
   renderScoreboard();
