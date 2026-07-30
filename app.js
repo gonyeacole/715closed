@@ -326,7 +326,7 @@ function resultCellClassAndLabel(status) {
   if (status === 'a') return ['res-a', 'A'];
   if (status === 'b') return ['res-b', 'B'];
   if (status === 'halve') return ['res-halve', '½'];
-  if (status === 'push-beer') return ['res-push', '🍺'];
+  if (status === 'push-beer') return ['res-push', 'PSH'];
   return ['res-pending', ''];
 }
 
