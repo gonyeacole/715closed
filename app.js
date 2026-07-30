@@ -143,17 +143,20 @@ async function initFirebase() {
 }
 
 function setSyncStatus(status) {
-  const el = document.getElementById('syncStatus');
-  if (!el) return;
+  const indicator = document.getElementById('syncIndicator');
+  const main = document.getElementById('syncMain');
+  const sub = document.getElementById('syncSub');
+  if (!indicator || !main || !sub) return;
+  indicator.className = 'sync-indicator sync-' + status;
   if (status === 'live') {
-    el.textContent = 'Live — synced with everyone';
-    el.className = 'sync-status sync-live';
+    main.textContent = 'Live';
+    sub.textContent = 'Synced with everyone';
   } else if (status === 'connecting') {
-    el.textContent = 'Connecting…';
-    el.className = 'sync-status sync-connecting';
+    main.textContent = 'Connecting';
+    sub.textContent = 'Setting up sync…';
   } else {
-    el.textContent = 'Offline — scores saved on this device only';
-    el.className = 'sync-status sync-offline';
+    main.textContent = 'Offline';
+    sub.textContent = 'Saved on this device';
   }
 }
 

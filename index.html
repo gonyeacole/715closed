@@ -12,20 +12,25 @@
   <h1>715 Closed 2026</h1>
   <div class="scoreboard" id="scoreboard">
     <div class="team-score team-a">
-      <span class="team-label">Team A</span>
       <span class="team-points" id="teamAPoints">0</span>
+      <span class="team-label">Team A</span>
     </div>
-    <div class="vs">vs</div>
+    <div class="score-center">
+      <div class="sync-indicator sync-connecting" id="syncIndicator">
+        <span class="sync-dot"></span>
+        <span class="sync-main" id="syncMain">Connecting</span>
+      </div>
+      <span class="sync-sub" id="syncSub">Setting up sync&hellip;</span>
+    </div>
     <div class="team-score team-b">
-      <span class="team-label">Team B</span>
       <span class="team-points" id="teamBPoints">0</span>
+      <span class="team-label">Team B</span>
     </div>
   </div>
   <div class="rosters">
     <span class="roster-a">Pete &middot; Shane &middot; Bush</span>
     <span class="roster-b">Cole &middot; Scarr &middot; Jordy</span>
   </div>
-  <div class="sync-status sync-connecting" id="syncStatus">Connecting&hellip;</div>
 </header>
 
 <nav class="day-tabs" id="dayTabs"></nav>
