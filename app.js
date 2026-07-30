@@ -381,11 +381,12 @@ function buildSinglesTable(day, holesSubset, startIdx, resultCellRefs, inputRefs
 }
 
 // Builds a collapsible match card: header (title, Thru badge, subtitle) and
-// a scoreline row (team names either side of the running score) are always
-// visible; the hole tables are hidden until the toggle bar is clicked.
-// Tables stay in the DOM while collapsed (just hidden via CSS) so score
-// updates keep flowing to them regardless of open/closed state.
-function buildMatchCardShell(title, subtitleHtml, sideALabel, sideBLabel) {
+// a scoreline row (team names stacked either side of the running score) are
+// always visible; the hole tables are hidden until the toggle bar is
+// clicked. Tables stay in the DOM while collapsed (just hidden via CSS) so
+// score updates keep flowing to them regardless of open/closed state.
+// sideANames/sideBNames are arrays of player names, stacked one per line.
+function buildMatchCardShell(title, subtitleHtml, sideANames, sideBNames) {
   const card = document.createElement('div');
   card.className = 'match-card';
 
@@ -397,16 +398,26 @@ function buildMatchCardShell(title, subtitleHtml, sideALabel, sideBLabel) {
       <span class="live-badge" hidden>Live</span>
     </div>
     <span class="match-thru" hidden></span>
-    <p class="match-sub">${subtitleHtml}</p>
+    ${subtitleHtml ? `<p class="match-sub">${subtitleHtml}</p>` : ''}
   `;
   const liveBadge = header.querySelector('.live-badge');
   const thruText = header.querySelector('.match-thru');
 
+  function buildSide(names, align) {
+    const wrap = document.createElement('div');
+    wrap.className = 'scoreline-side scoreline-' + align;
+    names.forEach((name) => {
+      const line = document.createElement('div');
+      line.className = 'scoreline-name';
+      line.textContent = name;
+      wrap.appendChild(line);
+    });
+    return wrap;
+  }
+
   const scoreline = document.createElement('div');
   scoreline.className = 'match-scoreline';
-  const sideA = document.createElement('span');
-  sideA.className = 'scoreline-side scoreline-a';
-  sideA.textContent = sideALabel;
+  const sideA = buildSide(sideANames, 'a');
   const scoreChip = document.createElement('div');
   scoreChip.className = 'match-score-chip';
   const spanA = document.createElement('span');
@@ -419,9 +430,7 @@ function buildMatchCardShell(title, subtitleHtml, sideALabel, sideBLabel) {
   scoreChip.appendChild(spanA);
   scoreChip.appendChild(sep);
   scoreChip.appendChild(spanB);
-  const sideB = document.createElement('span');
-  sideB.className = 'scoreline-side scoreline-b';
-  sideB.textContent = sideBLabel;
+  const sideB = buildSide(sideBNames, 'b');
   scoreline.appendChild(sideA);
   scoreline.appendChild(scoreChip);
   scoreline.appendChild(sideB);
@@ -463,9 +472,9 @@ function renderMain() {
   // Best ball card
   const bbShell = buildMatchCardShell(
     'Best Ball',
-    day.course,
-    day.bestBall.teamA.join('/'),
-    day.bestBall.teamB.join('/')
+    '',
+    day.bestBall.teamA,
+    day.bestBall.teamB
   );
   refs.bestBallSummary = bbShell;
   const bbFront = document.createElement('div');
@@ -481,9 +490,9 @@ function renderMain() {
   // Singles card
   const sgShell = buildMatchCardShell(
     'Singles',
-    `Jov can back up either player &mdash; ${day.course}`,
-    day.singles.a,
-    day.singles.b
+    'Jov can back up either player',
+    [day.singles.a],
+    [day.singles.b]
   );
   refs.singlesSummary = sgShell;
   const sgFront = document.createElement('div');
