@@ -89,7 +89,7 @@ body {
 .day-tabs {
   display: flex;
   gap: 0;
-  padding: 0 16px;
+  padding: 0;
   overflow-x: auto;
 }
 
@@ -109,14 +109,6 @@ body {
 
 .day-tab + .day-tab {
   border-left: none;
-}
-
-.day-tab:first-child {
-  border-radius: 0 0 0 10px;
-}
-
-.day-tab:last-child {
-  border-radius: 0 0 10px 0;
 }
 
 .day-tab.active {
