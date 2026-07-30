@@ -71,6 +71,21 @@ body {
   flex-wrap: wrap;
 }
 
+.sync-status {
+  margin-top: 8px;
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.14);
+}
+
+.sync-connecting { color: #f4f4f0; opacity: 0.8; }
+.sync-live { color: #d3f7dc; }
+.sync-offline { color: #ffdca8; }
+
 .day-tabs {
   display: flex;
   gap: 8px;

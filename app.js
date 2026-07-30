@@ -1,3 +1,13 @@
+const firebaseConfig = {
+  apiKey: 'AIzaSyC9X3Y9xi_nVJCCaaChAT5v-o2fIVuITIM',
+  authDomain: 'closed2026-e85d4.firebaseapp.com',
+  databaseURL: 'https://closed2026-e85d4-default-rtdb.firebaseio.com',
+  projectId: 'closed2026-e85d4',
+  storageBucket: 'closed2026-e85d4.firebasestorage.app',
+  messagingSenderId: '740505943872',
+  appId: '1:740505943872:web:d10b72ffb138baabae04a5',
+};
+
 const TEAMS = {
   A: ['Pete', 'Shane', 'Bush'],
   B: ['Cole', 'Scarr', 'Jordy'],
@@ -36,38 +46,112 @@ function emptyHole() {
   return {};
 }
 
-function loadState() {
+// Normalizes raw hole data (from localStorage or a Firebase snapshot, which
+// may be null, partial, or array-shaped) into a fixed 18-entry array.
+function normalizeHoles(raw) {
+  const holes = HOLES.map(emptyHole);
+  if (!raw) return holes;
+  Object.keys(raw).forEach((key) => {
+    const idx = Number(key);
+    if (Number.isInteger(idx) && idx >= 0 && idx < 18 && raw[key]) {
+      holes[idx] = { ...raw[key] };
+    }
+  });
+  return holes;
+}
+
+function normalizeState(rawDays) {
+  const state = { days: {} };
+  DAYS.forEach((d) => {
+    const rd = rawDays && rawDays[d.id];
+    state.days[d.id] = {
+      bestBall: { holes: normalizeHoles(rd && rd.bestBall && rd.bestBall.holes) },
+      singles: { holes: normalizeHoles(rd && rd.singles && rd.singles.holes) },
+    };
+  });
+  return state;
+}
+
+function loadCachedState() {
   let saved = null;
   try {
     saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
   } catch (e) {
     saved = null;
   }
-  const state = { days: {} };
-  DAYS.forEach((d) => {
-    const savedDay = (saved && saved.days && saved.days[d.id]) || {};
-    state.days[d.id] = {
-      bestBall: {
-        holes: (savedDay.bestBall && savedDay.bestBall.holes) || HOLES.map(emptyHole),
-      },
-      singles: {
-        holes: (savedDay.singles && savedDay.singles.holes) || HOLES.map(emptyHole),
-      },
-    };
-  });
-  return state;
+  return normalizeState(saved && saved.days);
 }
 
-let state = loadState();
+function saveCache() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+let state = loadCachedState();
 let activeDay = 1;
 
 // References to DOM nodes that need lightweight updates after a score
 // changes, without rebuilding the input tables (which would drop focus
-// mid-keystroke). Rebuilt only when the visible day changes.
+// mid-keystroke, or clobber a value someone else is entering on another
+// device right now). Rebuilt only when the visible day changes.
 let refs = null;
 
-function saveState() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+// Firebase wiring. Loaded dynamically (not a static top-level import) so
+// that if the CDN is unreachable — spotty course wifi, a blocked network —
+// the app still boots from local storage instead of failing to load.
+let fbDb = null;
+let fbRef = null;
+let fbOnValue = null;
+let fbSet = null;
+let fbRemove = null;
+let firebaseReady = false;
+
+async function initFirebase() {
+  try {
+    const [{ initializeApp }, { getDatabase, ref, onValue, set, remove }] = await Promise.all([
+      import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
+      import('https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js'),
+    ]);
+    const app = initializeApp(firebaseConfig);
+    fbDb = getDatabase(app);
+    fbRef = ref;
+    fbOnValue = onValue;
+    fbSet = set;
+    fbRemove = remove;
+    firebaseReady = true;
+    setSyncStatus('connecting');
+
+    fbOnValue(
+      fbRef(fbDb, 'days'),
+      (snapshot) => {
+        state = normalizeState(snapshot.val());
+        saveCache();
+        syncFromRemote();
+        setSyncStatus('live');
+      },
+      (err) => {
+        console.error('Firebase read failed', err);
+        setSyncStatus('offline');
+      }
+    );
+  } catch (err) {
+    console.error('Firebase unavailable, using local-only storage', err);
+    setSyncStatus('offline');
+  }
+}
+
+function setSyncStatus(status) {
+  const el = document.getElementById('syncStatus');
+  if (!el) return;
+  if (status === 'live') {
+    el.textContent = 'Live — synced with everyone';
+    el.className = 'sync-status sync-live';
+  } else if (status === 'connecting') {
+    el.textContent = 'Connecting…';
+    el.className = 'sync-status sync-connecting';
+  } else {
+    el.textContent = 'Offline — scores saved on this device only';
+    el.className = 'sync-status sync-offline';
+  }
 }
 
 function numOrNull(v) {
@@ -155,11 +239,21 @@ function handleScoreChange(day, matchType, holeIndex, player, rawValue) {
   } else {
     holeData[player] = rawValue;
   }
-  saveState();
+  saveCache();
+
+  if (firebaseReady) {
+    const path = `days/${day.id}/${matchType}/holes/${holeIndex}/${player}`;
+    const op = rawValue === '' ? fbRemove(fbRef(fbDb, path)) : fbSet(fbRef(fbDb, path), rawValue);
+    op.catch((err) => {
+      console.error('Sync failed', err);
+      setSyncStatus('offline');
+    });
+  }
+
   refreshDerived(day);
 }
 
-function holeInput(day, matchType, holeIndex, player, value) {
+function holeInput(day, matchType, holeIndex, player, value, inputRefs) {
   const input = document.createElement('input');
   input.type = 'number';
   input.min = '1';
@@ -168,10 +262,11 @@ function holeInput(day, matchType, holeIndex, player, value) {
   input.addEventListener('input', (e) => {
     handleScoreChange(day, matchType, holeIndex, player, e.target.value);
   });
+  inputRefs[`${matchType}|${holeIndex}|${player}`] = input;
   return input;
 }
 
-function buildBestBallTable(day, holesSubset, startIdx, resultCellRefs) {
+function buildBestBallTable(day, holesSubset, startIdx, resultCellRefs, inputRefs) {
   const table = document.createElement('table');
   table.className = 'holes';
   const players = [...day.bestBall.teamA, ...day.bestBall.teamB];
@@ -191,7 +286,7 @@ function buildBestBallTable(day, holesSubset, startIdx, resultCellRefs) {
       const idx = startIdx + i;
       const td = document.createElement('td');
       const holeData = state.days[day.id].bestBall.holes[idx];
-      td.appendChild(holeInput(day, 'bestBall', idx, p, holeData[p]));
+      td.appendChild(holeInput(day, 'bestBall', idx, p, holeData[p], inputRefs));
       row.appendChild(td);
     });
     table.appendChild(row);
@@ -215,7 +310,7 @@ function buildBestBallTable(day, holesSubset, startIdx, resultCellRefs) {
   return table;
 }
 
-function buildSinglesTable(day, holesSubset, startIdx, resultCellRefs) {
+function buildSinglesTable(day, holesSubset, startIdx, resultCellRefs, inputRefs) {
   const table = document.createElement('table');
   table.className = 'holes';
   const players = [day.singles.a, day.singles.b, 'Jov'];
@@ -237,7 +332,7 @@ function buildSinglesTable(day, holesSubset, startIdx, resultCellRefs) {
       const idx = startIdx + i;
       const td = document.createElement('td');
       const holeData = state.days[day.id].singles.holes[idx];
-      td.appendChild(holeInput(day, 'singles', idx, p, holeData[p]));
+      td.appendChild(holeInput(day, 'singles', idx, p, holeData[p], inputRefs));
       row.appendChild(td);
     });
     table.appendChild(row);
@@ -281,6 +376,7 @@ function renderMain() {
   refs = {
     bestBallCells: {},
     singlesCells: {},
+    inputs: {},
     bestBallSummary: null,
     singlesSummary: null,
   };
@@ -294,10 +390,10 @@ function renderMain() {
   bbCard.appendChild(bbSummary.wrap);
   const bbFront = document.createElement('div');
   bbFront.className = 'nine-block';
-  bbFront.appendChild(buildBestBallTable(day, FRONT, 0, refs.bestBallCells));
+  bbFront.appendChild(buildBestBallTable(day, FRONT, 0, refs.bestBallCells, refs.inputs));
   const bbBack = document.createElement('div');
   bbBack.className = 'nine-block';
-  bbBack.appendChild(buildBestBallTable(day, BACK, 9, refs.bestBallCells));
+  bbBack.appendChild(buildBestBallTable(day, BACK, 9, refs.bestBallCells, refs.inputs));
   bbCard.appendChild(bbFront);
   bbCard.appendChild(bbBack);
   app.appendChild(bbCard);
@@ -311,10 +407,10 @@ function renderMain() {
   sgCard.appendChild(sgSummary.wrap);
   const sgFront = document.createElement('div');
   sgFront.className = 'nine-block';
-  sgFront.appendChild(buildSinglesTable(day, FRONT, 0, refs.singlesCells));
+  sgFront.appendChild(buildSinglesTable(day, FRONT, 0, refs.singlesCells, refs.inputs));
   const sgBack = document.createElement('div');
   sgBack.className = 'nine-block';
-  sgBack.appendChild(buildSinglesTable(day, BACK, 9, refs.singlesCells));
+  sgBack.appendChild(buildSinglesTable(day, BACK, 9, refs.singlesCells, refs.inputs));
   sgCard.appendChild(sgFront);
   sgCard.appendChild(sgBack);
   app.appendChild(sgCard);
@@ -375,6 +471,27 @@ function refreshDerived(day) {
   renderScoreboard();
 }
 
+// Called when new data arrives from Firebase (possibly entered by someone
+// else's phone). Pushes fresh values into any input the local user isn't
+// actively typing into, then refreshes results/totals.
+function syncFromRemote() {
+  const day = DAYS.find((d) => d.id === activeDay);
+  if (refs) {
+    const active = document.activeElement;
+    Object.keys(refs.inputs).forEach((key) => {
+      const input = refs.inputs[key];
+      if (input === active) return;
+      const [matchType, idxStr, player] = key.split('|');
+      const idx = Number(idxStr);
+      const holeData = state.days[day.id][matchType].holes[idx];
+      const v = holeData[player];
+      const newVal = v === undefined || v === null ? '' : v;
+      if (input.value !== newVal) input.value = newVal;
+    });
+  }
+  refreshDerived(day);
+}
+
 function renderScoreboard() {
   const { teamA, teamB, beerEvents } = computeTotals();
   document.getElementById('teamAPoints').textContent = fmtPts(teamA);
@@ -404,11 +521,15 @@ function render() {
 
 document.getElementById('resetBtn').addEventListener('click', () => {
   if (confirm('Reset all scores for the entire tournament? This cannot be undone.')) {
+    if (firebaseReady) {
+      fbRemove(fbRef(fbDb, 'days')).catch((err) => console.error('Reset sync failed', err));
+    }
     localStorage.removeItem(STORAGE_KEY);
-    state = loadState();
+    state = normalizeState(null);
     activeDay = 1;
     render();
   }
 });
 
 render();
+initFirebase();
