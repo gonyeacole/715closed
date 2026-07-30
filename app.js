@@ -268,6 +268,27 @@ function holeInput(day, matchType, holeIndex, player, value, inputRefs) {
   return input;
 }
 
+// Sums a player's entered scores over [start, start+count). Returns null
+// (rendered as a blank cell) if nothing has been entered in that range yet.
+function sumRange(holes, start, count, player) {
+  let total = 0;
+  let any = false;
+  for (let i = start; i < start + count; i++) {
+    const v = numOrNull(holes[i][player]);
+    if (v !== null) {
+      total += v;
+      any = true;
+    }
+  }
+  return any ? total : null;
+}
+
+function sumPar(par, start, count) {
+  let total = 0;
+  for (let i = start; i < start + count; i++) total += par[i];
+  return total;
+}
+
 function buildParRow(day, holesSubset, startIdx) {
   const parRow = document.createElement('tr');
   parRow.className = 'par-row';
@@ -281,16 +302,70 @@ function buildParRow(day, holesSubset, startIdx) {
     td.textContent = day.par[idx];
     parRow.appendChild(td);
   });
+  if (holesSubset === FRONT) {
+    const td = document.createElement('td');
+    td.className = 'total-cell';
+    td.textContent = sumPar(day.par, 0, 9);
+    parRow.appendChild(td);
+  } else if (holesSubset === BACK) {
+    const inTd = document.createElement('td');
+    inTd.className = 'total-cell';
+    inTd.textContent = sumPar(day.par, 9, 9);
+    parRow.appendChild(inTd);
+    const totTd = document.createElement('td');
+    totTd.className = 'total-cell';
+    totTd.textContent = sumPar(day.par, 0, 18);
+    parRow.appendChild(totTd);
+  }
   return parRow;
 }
 
-function buildBestBallTable(day, holesSubset, startIdx, resultCellRefs, inputRefs) {
+// FRONT gets an "OUT" total column, BACK gets "IN" and "TOT" columns,
+// mirroring a physical scorecard. totalsRefs accumulates per-player DOM
+// refs across both the front and back table builds so refreshDerived can
+// update out/in/tot together later.
+function totalHeaderHtml(holesSubset) {
+  if (holesSubset === FRONT) return '<th>OUT</th>';
+  if (holesSubset === BACK) return '<th>IN</th><th>TOT</th>';
+  return '';
+}
+
+function appendTotalCells(row, holesSubset, totalsRefs, player) {
+  totalsRefs[player] = totalsRefs[player] || {};
+  if (holesSubset === FRONT) {
+    const td = document.createElement('td');
+    td.className = 'total-cell';
+    row.appendChild(td);
+    totalsRefs[player].out = td;
+  } else if (holesSubset === BACK) {
+    const inTd = document.createElement('td');
+    inTd.className = 'total-cell';
+    row.appendChild(inTd);
+    const totTd = document.createElement('td');
+    totTd.className = 'total-cell';
+    row.appendChild(totTd);
+    totalsRefs[player].in = inTd;
+    totalsRefs[player].tot = totTd;
+  }
+}
+
+function appendResultSpacerCells(resultRow, holesSubset) {
+  if (holesSubset === FRONT) {
+    resultRow.appendChild(document.createElement('td'));
+  } else if (holesSubset === BACK) {
+    resultRow.appendChild(document.createElement('td'));
+    resultRow.appendChild(document.createElement('td'));
+  }
+}
+
+function buildBestBallTable(day, holesSubset, startIdx, resultCellRefs, inputRefs, totalsRefs) {
   const table = document.createElement('table');
   table.className = 'holes';
   const players = [...day.bestBall.teamA, ...day.bestBall.teamB];
 
   const headRow = document.createElement('tr');
-  headRow.innerHTML = '<th class="player-label">Hole</th>' + holesSubset.map((h) => `<th>${h}</th>`).join('');
+  headRow.innerHTML =
+    '<th class="player-label">Hole</th>' + holesSubset.map((h) => `<th>${h}</th>`).join('') + totalHeaderHtml(holesSubset);
   table.appendChild(headRow);
   table.appendChild(buildParRow(day, holesSubset, startIdx));
 
@@ -308,6 +383,7 @@ function buildBestBallTable(day, holesSubset, startIdx, resultCellRefs, inputRef
       td.appendChild(holeInput(day, 'bestBall', idx, p, holeData[p], inputRefs));
       row.appendChild(td);
     });
+    appendTotalCells(row, holesSubset, totalsRefs, p);
     table.appendChild(row);
   });
 
@@ -324,18 +400,20 @@ function buildBestBallTable(day, holesSubset, startIdx, resultCellRefs, inputRef
     resultRow.appendChild(td);
     resultCellRefs[idx] = td;
   });
+  appendResultSpacerCells(resultRow, holesSubset);
   table.appendChild(resultRow);
 
   return table;
 }
 
-function buildSinglesTable(day, holesSubset, startIdx, resultCellRefs, inputRefs) {
+function buildSinglesTable(day, holesSubset, startIdx, resultCellRefs, inputRefs, totalsRefs) {
   const table = document.createElement('table');
   table.className = 'holes';
   const players = [day.singles.a, day.singles.b, 'Jov'];
 
   const headRow = document.createElement('tr');
-  headRow.innerHTML = '<th class="player-label">Hole</th>' + holesSubset.map((h) => `<th>${h}</th>`).join('');
+  headRow.innerHTML =
+    '<th class="player-label">Hole</th>' + holesSubset.map((h) => `<th>${h}</th>`).join('') + totalHeaderHtml(holesSubset);
   table.appendChild(headRow);
   table.appendChild(buildParRow(day, holesSubset, startIdx));
 
@@ -355,6 +433,7 @@ function buildSinglesTable(day, holesSubset, startIdx, resultCellRefs, inputRefs
       td.appendChild(holeInput(day, 'singles', idx, p, holeData[p], inputRefs));
       row.appendChild(td);
     });
+    appendTotalCells(row, holesSubset, totalsRefs, p);
     table.appendChild(row);
   });
 
@@ -371,6 +450,7 @@ function buildSinglesTable(day, holesSubset, startIdx, resultCellRefs, inputRefs
     resultRow.appendChild(td);
     resultCellRefs[idx] = td;
   });
+  appendResultSpacerCells(resultRow, holesSubset);
   table.appendChild(resultRow);
 
   return table;
@@ -465,6 +545,8 @@ function renderMain() {
     inputs: {},
     bestBallSummary: null,
     singlesSummary: null,
+    bestBallTotals: {},
+    singlesTotals: {},
   };
 
   // Best ball card
@@ -477,10 +559,10 @@ function renderMain() {
   refs.bestBallSummary = bbShell;
   const bbFront = document.createElement('div');
   bbFront.className = 'nine-block';
-  bbFront.appendChild(buildBestBallTable(day, FRONT, 0, refs.bestBallCells, refs.inputs));
+  bbFront.appendChild(buildBestBallTable(day, FRONT, 0, refs.bestBallCells, refs.inputs, refs.bestBallTotals));
   const bbBack = document.createElement('div');
   bbBack.className = 'nine-block';
-  bbBack.appendChild(buildBestBallTable(day, BACK, 9, refs.bestBallCells, refs.inputs));
+  bbBack.appendChild(buildBestBallTable(day, BACK, 9, refs.bestBallCells, refs.inputs, refs.bestBallTotals));
   bbShell.body.appendChild(bbFront);
   bbShell.body.appendChild(bbBack);
   app.appendChild(bbShell.card);
@@ -495,15 +577,37 @@ function renderMain() {
   refs.singlesSummary = sgShell;
   const sgFront = document.createElement('div');
   sgFront.className = 'nine-block';
-  sgFront.appendChild(buildSinglesTable(day, FRONT, 0, refs.singlesCells, refs.inputs));
+  sgFront.appendChild(buildSinglesTable(day, FRONT, 0, refs.singlesCells, refs.inputs, refs.singlesTotals));
   const sgBack = document.createElement('div');
   sgBack.className = 'nine-block';
-  sgBack.appendChild(buildSinglesTable(day, BACK, 9, refs.singlesCells, refs.inputs));
+  sgBack.appendChild(buildSinglesTable(day, BACK, 9, refs.singlesCells, refs.inputs, refs.singlesTotals));
   sgShell.body.appendChild(sgFront);
   sgShell.body.appendChild(sgBack);
   app.appendChild(sgShell.card);
 
   refreshDerived(day);
+}
+
+// Updates each player's OUT/IN/TOT total cells for the currently visible
+// day, based on whatever scores are entered so far.
+function updateTotals(day) {
+  if (!refs) return;
+
+  function updateFor(holes, totalsRefs, players) {
+    players.forEach((p) => {
+      const t = totalsRefs[p];
+      if (!t) return;
+      const out = sumRange(holes, 0, 9, p);
+      const inn = sumRange(holes, 9, 9, p);
+      const tot = sumRange(holes, 0, 18, p);
+      if (t.out) t.out.textContent = out === null ? '' : out;
+      if (t.in) t.in.textContent = inn === null ? '' : inn;
+      if (t.tot) t.tot.textContent = tot === null ? '' : tot;
+    });
+  }
+
+  updateFor(state.days[day.id].bestBall.holes, refs.bestBallTotals, [...day.bestBall.teamA, ...day.bestBall.teamB]);
+  updateFor(state.days[day.id].singles.holes, refs.singlesTotals, [day.singles.a, day.singles.b, 'Jov']);
 }
 
 // Shows a "Live" badge once any score has been entered for a match, which
@@ -610,6 +714,7 @@ function refreshDerived(day) {
   updateMatchStatus(refs.singlesSummary, sgAny, sgCompleted);
 
   updateScoreStyles(day);
+  updateTotals(day);
   renderScoreboard();
 }
 

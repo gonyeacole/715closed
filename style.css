@@ -382,6 +382,12 @@ table.holes tr.par-row td.player-label {
   background: #eef2f9;
 }
 
+table.holes td.total-cell {
+  background: var(--navy-light);
+  color: var(--navy-dark);
+  font-weight: 700;
+}
+
 table.holes td.label-team-a {
   background: var(--team-a);
   color: #fff;
