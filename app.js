@@ -389,12 +389,14 @@ function buildMatchCardShell(title, subtitleHtml, sideANames, sideBNames) {
   const header = document.createElement('div');
   header.className = 'match-header';
   header.innerHTML = `
-    <div class="match-title-row">
-      <h2>${title}</h2>
-      <span class="live-badge" hidden>Live</span>
+    <div class="match-header-left">
+      <div class="match-title-row">
+        <h2>${title}</h2>
+        <span class="live-badge" hidden>Live</span>
+      </div>
+      ${subtitleHtml ? `<p class="match-sub">${subtitleHtml}</p>` : ''}
     </div>
     <span class="match-thru" hidden></span>
-    ${subtitleHtml ? `<p class="match-sub">${subtitleHtml}</p>` : ''}
   `;
   const liveBadge = header.querySelector('.live-badge');
   const thruText = header.querySelector('.match-thru');
