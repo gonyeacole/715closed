@@ -183,6 +183,21 @@ main {
   display: none;
 }
 
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+.live-badge:not([hidden]) {
+  animation: live-pulse 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .live-badge:not([hidden]) {
+    animation: none;
+  }
+}
+
 .match-sub {
   margin: 0;
   font-size: 0.8rem;
