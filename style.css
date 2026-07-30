@@ -1,14 +1,14 @@
 :root {
-  --green-dark: #1e4d2b;
-  --green: #2f7a3e;
-  --green-light: #e8f4ea;
+  --navy-dark: #101d35;
+  --navy: #1e3a63;
+  --navy-light: #e8ecf5;
   --team-a: #2f6fed;
   --team-b: #e0562f;
   --ink: #1a1f1a;
   --muted: #6b7570;
-  --border: #d9e2d9;
+  --border: #d9dfe8;
   --push: #b98900;
-  --bg: #f6f8f5;
+  --bg: #f5f7fa;
   --card: #ffffff;
 }
 
@@ -23,7 +23,7 @@ body {
 }
 
 .topbar {
-  background: linear-gradient(135deg, var(--green-dark), var(--green));
+  background: linear-gradient(135deg, var(--navy-dark), var(--navy));
   color: white;
   padding: 16px 16px 20px;
   text-align: center;
@@ -112,7 +112,7 @@ body {
 }
 
 .day-tab.active {
-  color: var(--green-dark);
+  color: var(--navy-dark);
   background: var(--card);
   box-shadow: 0 -2px 6px rgba(0,0,0,0.04);
 }
@@ -193,7 +193,7 @@ main {
   margin: 4px 0 0;
   font-size: 0.72rem;
   font-weight: 600;
-  color: var(--green-dark);
+  color: var(--navy-dark);
 }
 
 .match-score-chip {
@@ -213,7 +213,7 @@ main {
 .match-toggle {
   display: block;
   width: 100%;
-  background: var(--green);
+  background: var(--navy);
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -224,11 +224,11 @@ main {
 }
 
 .match-toggle:active {
-  background: var(--green-dark);
+  background: var(--navy-dark);
 }
 
 .match-toggle:focus-visible {
-  outline: 2px solid var(--green-dark);
+  outline: 2px solid var(--navy-dark);
   outline-offset: 2px;
 }
 
@@ -260,8 +260,8 @@ table.holes th, table.holes td {
 }
 
 table.holes th {
-  background: var(--green-light);
-  color: var(--green-dark);
+  background: var(--navy-light);
+  color: var(--navy-dark);
   font-weight: 600;
   font-size: 0.72rem;
 }
@@ -271,18 +271,18 @@ table.holes td.player-label, table.holes th.player-label {
   padding-left: 6px;
   white-space: nowrap;
   font-weight: 600;
-  background: #fafcf9;
+  background: #fafbfd;
 }
 
 tr.par-row td {
-  background: #f1f6f1;
-  color: var(--green-dark);
+  background: #eef2f9;
+  color: var(--navy-dark);
   font-weight: 600;
   font-size: 0.72rem;
 }
 
 table.holes tr.par-row td.player-label {
-  background: #f1f6f1;
+  background: #eef2f9;
 }
 
 table.holes td.label-team-a {
@@ -310,7 +310,7 @@ table.holes input {
 }
 
 table.holes input:focus {
-  outline: 2px solid var(--green);
+  outline: 2px solid var(--navy);
 }
 
 table.holes input.score-eagle {
