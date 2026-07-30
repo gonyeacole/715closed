@@ -133,29 +133,68 @@ main {
   margin-bottom: 16px;
 }
 
-.match-card h2 {
+.match-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.match-header h2 {
   margin: 0 0 2px;
   font-size: 1.05rem;
 }
 
 .match-sub {
-  margin: 0 0 12px;
+  margin: 0;
   font-size: 0.8rem;
   color: var(--muted);
 }
 
-.match-points {
+.match-score-chip {
   display: flex;
-  gap: 10px;
-  margin-bottom: 12px;
-  font-size: 0.85rem;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
 }
 
-.match-points span {
-  background: var(--green-light);
+.chip-a { color: var(--team-a); }
+.chip-b { color: var(--team-b); }
+.chip-sep { color: var(--muted); font-size: 1.1rem; font-weight: 400; }
+
+.match-toggle {
+  display: block;
+  width: 100%;
+  background: var(--green);
+  color: #fff;
+  border: none;
   border-radius: 8px;
-  padding: 4px 10px;
+  padding: 10px;
   font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.match-toggle:active {
+  background: var(--green-dark);
+}
+
+.match-toggle:focus-visible {
+  outline: 2px solid var(--green-dark);
+  outline-offset: 2px;
+}
+
+.match-body {
+  display: none;
+  margin-top: 14px;
+}
+
+.match-card.expanded .match-body {
+  display: block;
 }
 
 .nine-block {

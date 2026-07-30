@@ -377,16 +377,51 @@ function buildSinglesTable(day, holesSubset, startIdx, resultCellRefs, inputRefs
   return table;
 }
 
-function matchPointsSummary(aLabel, bLabel) {
-  const wrap = document.createElement('div');
-  wrap.className = 'match-points';
+// Builds a collapsible match card: header (title/subtitle/score chip) is
+// always visible, the hole tables are hidden until the toggle bar is
+// clicked. Tables stay in the DOM while collapsed (just hidden via CSS) so
+// score updates keep flowing to them regardless of open/closed state.
+function buildMatchCardShell(title, subtitleHtml) {
+  const card = document.createElement('div');
+  card.className = 'match-card';
+
+  const header = document.createElement('div');
+  header.className = 'match-header';
+  const headerText = document.createElement('div');
+  headerText.innerHTML = `<h2>${title}</h2><p class="match-sub">${subtitleHtml}</p>`;
+  const scoreChip = document.createElement('div');
+  scoreChip.className = 'match-score-chip';
   const spanA = document.createElement('span');
-  spanA.style.color = 'var(--team-a)';
+  spanA.className = 'chip-a';
+  const sep = document.createElement('span');
+  sep.className = 'chip-sep';
+  sep.textContent = '–';
   const spanB = document.createElement('span');
-  spanB.style.color = 'var(--team-b)';
-  wrap.appendChild(spanA);
-  wrap.appendChild(spanB);
-  return { wrap, spanA, spanB, aLabel, bLabel };
+  spanB.className = 'chip-b';
+  scoreChip.appendChild(spanA);
+  scoreChip.appendChild(sep);
+  scoreChip.appendChild(spanB);
+  header.appendChild(headerText);
+  header.appendChild(scoreChip);
+
+  const toggleBtn = document.createElement('button');
+  toggleBtn.type = 'button';
+  toggleBtn.className = 'match-toggle';
+  toggleBtn.textContent = 'Score this match';
+
+  const body = document.createElement('div');
+  body.className = 'match-body';
+
+  toggleBtn.addEventListener('click', () => {
+    const expanded = card.classList.toggle('expanded');
+    toggleBtn.textContent = expanded ? 'Hide scorecard' : 'Score this match';
+  });
+
+  card.appendChild(header);
+  card.appendChild(toggleBtn);
+  card.appendChild(body);
+
+  return { card, body, spanA, spanB };
 }
 
 function renderMain() {
@@ -403,38 +438,36 @@ function renderMain() {
   };
 
   // Best ball card
-  const bbCard = document.createElement('div');
-  bbCard.className = 'match-card';
-  bbCard.innerHTML = `<h2>Best Ball</h2><p class="match-sub">${day.bestBall.teamA.join('/')} vs ${day.bestBall.teamB.join('/')} &mdash; ${day.course}</p>`;
-  const bbSummary = matchPointsSummary(day.bestBall.teamA.join('/'), day.bestBall.teamB.join('/'));
-  refs.bestBallSummary = bbSummary;
-  bbCard.appendChild(bbSummary.wrap);
+  const bbShell = buildMatchCardShell(
+    'Best Ball',
+    `${day.bestBall.teamA.join('/')} vs ${day.bestBall.teamB.join('/')} &mdash; ${day.course}`
+  );
+  refs.bestBallSummary = bbShell;
   const bbFront = document.createElement('div');
   bbFront.className = 'nine-block';
   bbFront.appendChild(buildBestBallTable(day, FRONT, 0, refs.bestBallCells, refs.inputs));
   const bbBack = document.createElement('div');
   bbBack.className = 'nine-block';
   bbBack.appendChild(buildBestBallTable(day, BACK, 9, refs.bestBallCells, refs.inputs));
-  bbCard.appendChild(bbFront);
-  bbCard.appendChild(bbBack);
-  app.appendChild(bbCard);
+  bbShell.body.appendChild(bbFront);
+  bbShell.body.appendChild(bbBack);
+  app.appendChild(bbShell.card);
 
   // Singles card
-  const sgCard = document.createElement('div');
-  sgCard.className = 'match-card';
-  sgCard.innerHTML = `<h2>Singles</h2><p class="match-sub">${day.singles.a} vs ${day.singles.b} &mdash; Jov can back up either player &mdash; ${day.course}</p>`;
-  const sgSummary = matchPointsSummary(day.singles.a, day.singles.b);
-  refs.singlesSummary = sgSummary;
-  sgCard.appendChild(sgSummary.wrap);
+  const sgShell = buildMatchCardShell(
+    'Singles',
+    `${day.singles.a} vs ${day.singles.b} &mdash; Jov can back up either player &mdash; ${day.course}`
+  );
+  refs.singlesSummary = sgShell;
   const sgFront = document.createElement('div');
   sgFront.className = 'nine-block';
   sgFront.appendChild(buildSinglesTable(day, FRONT, 0, refs.singlesCells, refs.inputs));
   const sgBack = document.createElement('div');
   sgBack.className = 'nine-block';
   sgBack.appendChild(buildSinglesTable(day, BACK, 9, refs.singlesCells, refs.inputs));
-  sgCard.appendChild(sgFront);
-  sgCard.appendChild(sgBack);
-  app.appendChild(sgCard);
+  sgShell.body.appendChild(sgFront);
+  sgShell.body.appendChild(sgBack);
+  app.appendChild(sgShell.card);
 
   refreshDerived(day);
 }
@@ -499,8 +532,8 @@ function refreshDerived(day) {
       td.textContent = label;
     }
   });
-  refs.bestBallSummary.spanA.textContent = `${refs.bestBallSummary.aLabel}: ${fmtPts(bbA)}`;
-  refs.bestBallSummary.spanB.textContent = `${refs.bestBallSummary.bLabel}: ${fmtPts(bbB)}`;
+  refs.bestBallSummary.spanA.textContent = fmtPts(bbA);
+  refs.bestBallSummary.spanB.textContent = fmtPts(bbB);
 
   let sgA = 0;
   let sgB = 0;
@@ -515,8 +548,8 @@ function refreshDerived(day) {
       td.textContent = label;
     }
   });
-  refs.singlesSummary.spanA.textContent = `${refs.singlesSummary.aLabel}: ${fmtPts(sgA)}`;
-  refs.singlesSummary.spanB.textContent = `${refs.singlesSummary.bLabel}: ${fmtPts(sgB)}`;
+  refs.singlesSummary.spanA.textContent = fmtPts(sgA);
+  refs.singlesSummary.spanB.textContent = fmtPts(sgB);
 
   updateScoreStyles(day);
   renderScoreboard();
