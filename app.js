@@ -447,6 +447,33 @@ function resultCellClassAndLabel(status) {
   return ['res-pending', ''];
 }
 
+const SCORE_REL_CLASSES = ['score-eagle', 'score-birdie', 'score-par', 'score-bogey', 'score-double'];
+
+function scoreRelClass(score, par) {
+  const diff = score - par;
+  if (diff <= -2) return 'score-eagle';
+  if (diff === -1) return 'score-birdie';
+  if (diff === 0) return 'score-par';
+  if (diff === 1) return 'score-bogey';
+  return 'score-double';
+}
+
+// Colors each score input relative to par (birdie, bogey, etc.) for the
+// currently visible day.
+function updateScoreStyles(day) {
+  if (!refs) return;
+  Object.keys(refs.inputs).forEach((key) => {
+    const input = refs.inputs[key];
+    const [matchType, idxStr, player] = key.split('|');
+    const idx = Number(idxStr);
+    const val = numOrNull(state.days[day.id][matchType].holes[idx][player]);
+    input.classList.remove(...SCORE_REL_CLASSES);
+    if (val !== null) {
+      input.classList.add(scoreRelClass(val, day.par[idx]));
+    }
+  });
+}
+
 // Updates only text/class of already-built cells (no DOM rebuild), so
 // inputs never lose focus while someone is mid-keystroke.
 function refreshDerived(day) {
@@ -489,6 +516,7 @@ function refreshDerived(day) {
   refs.singlesSummary.spanA.textContent = `${refs.singlesSummary.aLabel}: ${fmtPts(sgA)}`;
   refs.singlesSummary.spanB.textContent = `${refs.singlesSummary.bLabel}: ${fmtPts(sgB)}`;
 
+  updateScoreStyles(day);
   renderScoreboard();
 }
 

@@ -230,6 +230,33 @@ table.holes input:focus {
   outline: 2px solid var(--green);
 }
 
+table.holes input.score-eagle {
+  background: #fdf0c9;
+  border-color: #c8940c;
+  color: #7a5c05;
+  font-weight: 700;
+}
+
+table.holes input.score-birdie {
+  background: #dcf5e1;
+  border-color: #2f9e4f;
+  color: #1c6b32;
+  font-weight: 700;
+}
+
+table.holes input.score-bogey {
+  background: #fde9dc;
+  border-color: var(--team-b);
+  color: #a8431d;
+}
+
+table.holes input.score-double {
+  background: #fbdcda;
+  border-color: #c73a3a;
+  color: #a02424;
+  font-weight: 700;
+}
+
 tr.result-row td {
   font-weight: 700;
   font-size: 0.75rem;
