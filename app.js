@@ -380,27 +380,33 @@ function buildSinglesTable(day, holesSubset, startIdx, resultCellRefs, inputRefs
   return table;
 }
 
-// Builds a collapsible match card: header (title/subtitle/score chip) is
-// always visible, the hole tables are hidden until the toggle bar is
-// clicked. Tables stay in the DOM while collapsed (just hidden via CSS) so
-// score updates keep flowing to them regardless of open/closed state.
-function buildMatchCardShell(title, subtitleHtml) {
+// Builds a collapsible match card: header (title, Thru badge, subtitle) and
+// a scoreline row (team names either side of the running score) are always
+// visible; the hole tables are hidden until the toggle bar is clicked.
+// Tables stay in the DOM while collapsed (just hidden via CSS) so score
+// updates keep flowing to them regardless of open/closed state.
+function buildMatchCardShell(title, subtitleHtml, sideALabel, sideBLabel) {
   const card = document.createElement('div');
   card.className = 'match-card';
 
   const header = document.createElement('div');
   header.className = 'match-header';
-  const headerText = document.createElement('div');
-  headerText.innerHTML = `
+  header.innerHTML = `
     <div class="match-title-row">
       <h2>${title}</h2>
       <span class="live-badge" hidden>Live</span>
     </div>
+    <span class="match-thru" hidden></span>
     <p class="match-sub">${subtitleHtml}</p>
-    <p class="match-thru" hidden></p>
   `;
-  const liveBadge = headerText.querySelector('.live-badge');
-  const thruText = headerText.querySelector('.match-thru');
+  const liveBadge = header.querySelector('.live-badge');
+  const thruText = header.querySelector('.match-thru');
+
+  const scoreline = document.createElement('div');
+  scoreline.className = 'match-scoreline';
+  const sideA = document.createElement('span');
+  sideA.className = 'scoreline-side scoreline-a';
+  sideA.textContent = sideALabel;
   const scoreChip = document.createElement('div');
   scoreChip.className = 'match-score-chip';
   const spanA = document.createElement('span');
@@ -413,8 +419,12 @@ function buildMatchCardShell(title, subtitleHtml) {
   scoreChip.appendChild(spanA);
   scoreChip.appendChild(sep);
   scoreChip.appendChild(spanB);
-  header.appendChild(headerText);
-  header.appendChild(scoreChip);
+  const sideB = document.createElement('span');
+  sideB.className = 'scoreline-side scoreline-b';
+  sideB.textContent = sideBLabel;
+  scoreline.appendChild(sideA);
+  scoreline.appendChild(scoreChip);
+  scoreline.appendChild(sideB);
 
   const toggleBtn = document.createElement('button');
   toggleBtn.type = 'button';
@@ -430,6 +440,7 @@ function buildMatchCardShell(title, subtitleHtml) {
   });
 
   card.appendChild(header);
+  card.appendChild(scoreline);
   card.appendChild(toggleBtn);
   card.appendChild(body);
 
@@ -452,7 +463,9 @@ function renderMain() {
   // Best ball card
   const bbShell = buildMatchCardShell(
     'Best Ball',
-    `${day.bestBall.teamA.join('/')} vs ${day.bestBall.teamB.join('/')} &mdash; ${day.course}`
+    day.course,
+    day.bestBall.teamA.join('/'),
+    day.bestBall.teamB.join('/')
   );
   refs.bestBallSummary = bbShell;
   const bbFront = document.createElement('div');
@@ -468,7 +481,9 @@ function renderMain() {
   // Singles card
   const sgShell = buildMatchCardShell(
     'Singles',
-    `${day.singles.a} vs ${day.singles.b} &mdash; Jov can back up either player &mdash; ${day.course}`
+    `Jov can back up either player &mdash; ${day.course}`,
+    day.singles.a,
+    day.singles.b
   );
   refs.singlesSummary = sgShell;
   const sgFront = document.createElement('div');

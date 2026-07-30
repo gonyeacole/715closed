@@ -173,8 +173,9 @@ body {
 }
 
 .day-tab.active {
-  color: var(--navy-dark);
-  background: var(--card);
+  color: var(--push);
+  background: #fff8e6;
+  border-color: #f0dfa6;
   box-shadow: 0 -2px 6px rgba(0,0,0,0.04);
 }
 
@@ -199,18 +200,14 @@ main {
 }
 
 .match-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .match-title-row {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 2px;
+  margin-bottom: 6px;
 }
 
 .match-title-row h2 {
@@ -259,27 +256,52 @@ main {
   }
 }
 
+.match-thru {
+  display: inline-block;
+  margin: 0 0 6px;
+  padding: 2px 9px;
+  border: 1.5px solid var(--navy);
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--push);
+}
+
+.match-thru[hidden] {
+  display: none;
+}
+
 .match-sub {
   margin: 0;
   font-size: 0.8rem;
   color: var(--muted);
 }
 
-.match-thru {
-  margin: 4px 0 0;
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--navy-dark);
+.match-scoreline {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 10px;
+  margin: 14px 0;
 }
+
+.scoreline-side {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.scoreline-a { text-align: left; }
+.scoreline-b { text-align: right; }
 
 .match-score-chip {
   display: flex;
   align-items: baseline;
+  justify-content: center;
   gap: 6px;
   font-size: 1.6rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
-  flex-shrink: 0;
 }
 
 .chip-a { color: var(--team-a); }
