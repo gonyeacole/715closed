@@ -506,10 +506,14 @@ function renderMain() {
   refreshDerived(day);
 }
 
-// Shows the "Live" badge once any score has been entered for a match, and
-// a "Thru N" readout counting holes where every required score is in.
+// Shows a "Live" badge once any score has been entered for a match, which
+// switches to "Completed" once every hole has a result, plus a "Thru N"
+// readout counting holes where every required score is in.
 function updateMatchStatus(shell, anyScore, completedHoles) {
+  const isComplete = completedHoles === HOLES.length;
   shell.liveBadge.hidden = !anyScore;
+  shell.liveBadge.textContent = isComplete ? 'Completed' : 'Live';
+  shell.liveBadge.classList.toggle('badge-completed', isComplete);
   shell.thruText.hidden = completedHoles === 0;
   if (completedHoles > 0) {
     shell.thruText.textContent = `Thru ${completedHoles}`;
