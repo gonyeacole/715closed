@@ -452,6 +452,7 @@ table.holes td.total-cell {
   background: var(--navy-light);
   color: var(--navy-dark);
   font-weight: 700;
+  font-size: 0.72rem;
 }
 
 table.holes td.label-team-a {
