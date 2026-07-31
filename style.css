@@ -85,6 +85,22 @@ body {
   background: linear-gradient(160deg, #e35a5a, #a11f1f);
 }
 
+.team-score.leading {
+  animation: leading-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes leading-pulse {
+  0%, 100% { box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.95), 0 0 12px 2px rgba(255, 255, 255, 0.45); }
+  50% { box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.4), 0 0 4px 1px rgba(255, 255, 255, 0.15); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .team-score.leading {
+    animation: none;
+    box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.95);
+  }
+}
+
 .team-points {
   font-size: 2.3rem;
   font-weight: 800;
