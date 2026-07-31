@@ -406,24 +406,18 @@ main#app.fade-in {
   outline-offset: 2px;
 }
 
-.match-body-wrap {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.match-card.expanded .match-body-wrap {
-  grid-template-rows: 1fr;
-}
-
 .match-body {
   overflow: hidden;
-  min-height: 0;
-  padding-top: 14px;
+  max-height: 0;
+  transition: max-height 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.match-card.expanded .match-toggle {
+  margin-bottom: 14px;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .match-body-wrap { transition: none; }
+  .match-body { transition: none; }
 }
 
 .nine-block {

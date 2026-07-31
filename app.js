@@ -540,21 +540,20 @@ function buildMatchCardShell(title, subtitleHtml, sideANames, sideBNames) {
   toggleBtn.className = 'match-toggle';
   toggleBtn.textContent = 'Score this match';
 
-  const bodyWrap = document.createElement('div');
-  bodyWrap.className = 'match-body-wrap';
   const body = document.createElement('div');
   body.className = 'match-body';
-  bodyWrap.appendChild(body);
 
   toggleBtn.addEventListener('click', () => {
-    const expanded = card.classList.toggle('expanded');
-    toggleBtn.textContent = expanded ? 'Hide scorecard' : 'Score this match';
+    const willExpand = !card.classList.contains('expanded');
+    card.classList.toggle('expanded', willExpand);
+    toggleBtn.textContent = willExpand ? 'Hide scorecard' : 'Score this match';
+    body.style.maxHeight = willExpand ? body.scrollHeight + 'px' : '0px';
   });
 
   card.appendChild(header);
   card.appendChild(scoreline);
   card.appendChild(toggleBtn);
-  card.appendChild(bodyWrap);
+  card.appendChild(body);
 
   return { card, body, spanA, spanB, liveBadge, thruText };
 }
@@ -744,7 +743,18 @@ function refreshDerived(day) {
 
   updateScoreStyles(day);
   updateTotals(day);
+  syncExpandedBodyHeight(refs.bestBallSummary);
+  syncExpandedBodyHeight(refs.singlesSummary);
   renderScoreboard();
+}
+
+// Score styling (birdie/bogey borders) can shift row heights by a pixel
+// or two; keep an already-open scorecard's max-height in sync so nothing
+// gets clipped.
+function syncExpandedBodyHeight(shell) {
+  if (shell && shell.card.classList.contains('expanded')) {
+    shell.body.style.maxHeight = shell.body.scrollHeight + 'px';
+  }
 }
 
 // Called when new data arrives from Firebase (possibly entered by someone
