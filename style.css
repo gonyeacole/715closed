@@ -515,6 +515,13 @@ footer {
   padding: 0 16px;
 }
 
+.footer-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 .reset-btn {
   background: #fff;
   border: 1px solid #d94848;
@@ -526,6 +533,18 @@ footer {
 }
 
 .reset-btn:active { background: #fdecec; }
+
+.refresh-btn {
+  background: #fff;
+  border: 1px solid var(--navy);
+  color: var(--navy);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.refresh-btn:active { background: var(--navy-light); }
 
 .footnote {
   font-size: 0.72rem;

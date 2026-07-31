@@ -786,6 +786,10 @@ function render() {
   renderMain();
 }
 
+document.getElementById('refreshBtn').addEventListener('click', () => {
+  location.reload();
+});
+
 document.getElementById('resetBtn').addEventListener('click', () => {
   if (confirm('Reset all scores for the entire tournament? This cannot be undone.')) {
     if (firebaseReady) {
