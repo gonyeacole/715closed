@@ -29,6 +29,7 @@
 
 :root {
   --navy-dark: #101d35;
+  --navy-darker: #0a1223;
   --navy: #1e3a63;
   --navy-light: #e8ecf5;
   --team-a: #2f6fed;
@@ -190,7 +191,7 @@ body {
   text-align: center;
   padding: 14px 8px;
   border-radius: 0;
-  background: transparent;
+  background: var(--navy-darker);
   border: none;
   border-right: 1px solid rgba(255, 255, 255, 0.1);
   cursor: pointer;
@@ -343,7 +344,7 @@ main#app.fade-in {
   flex-shrink: 0;
   margin: 0;
   padding: 3px 9px;
-  background: transparent;
+  background: var(--navy-darker);
   border: 1px solid #5b7cfa;
   border-radius: 6px;
   box-shadow: 0 0 8px rgba(91, 124, 250, 0.6);
@@ -398,7 +399,7 @@ main#app.fade-in {
 .match-toggle {
   display: block;
   width: 100%;
-  background: transparent;
+  background: var(--navy-darker);
   color: #fff;
   border: 1px solid #5b7cfa;
   border-radius: 8px;
