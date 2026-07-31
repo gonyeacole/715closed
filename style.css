@@ -414,8 +414,8 @@ table.holes th, table.holes td {
 }
 
 table.holes th {
-  background: var(--navy-light);
-  color: var(--navy-dark);
+  background: var(--navy);
+  color: #fff;
   font-weight: 600;
   font-size: 0.62rem;
   border-bottom: 1px solid var(--border);
@@ -434,7 +434,15 @@ table.holes td.player-label, table.holes th.player-label {
   text-overflow: ellipsis;
   font-weight: 600;
   font-size: 0.66rem;
+}
+
+table.holes td.player-label {
   background: #fafbfd;
+}
+
+table.holes th.player-label {
+  background: var(--navy);
+  color: #fff;
 }
 
 tr.par-row td {
@@ -449,7 +457,7 @@ table.holes tr.par-row td.player-label {
 }
 
 table.holes td.total-cell {
-  background: var(--navy-light);
+  background: #eef2f9;
   color: var(--navy-dark);
   font-weight: 600;
   font-size: 0.72rem;
