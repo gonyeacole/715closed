@@ -199,7 +199,7 @@ body {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.03em;
-  color: rgba(255, 255, 255, 0.55);
+  color: #fff;
   font-size: 0.8rem;
   transition: color 0.15s ease, background-color 0.15s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), filter 0.25s ease;
 }
@@ -213,9 +213,9 @@ body {
   filter: brightness(0.85);
 }
 
-.day-tab.active {
+.day-tab.active,
+.day-tab.active .course {
   color: #e8b93e;
-  background: rgba(232, 185, 62, 0.14);
 }
 
 .day-tab.active::after {
@@ -237,7 +237,7 @@ body {
   text-transform: none;
   letter-spacing: normal;
   font-size: 0.72rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.8);
   margin-top: 2px;
 }
 
