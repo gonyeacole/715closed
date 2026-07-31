@@ -67,6 +67,11 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: stretch;
+  background: linear-gradient(
+    100deg,
+    #4c86ff 0%, #1f4fb0 49%,
+    #a11f1f 51%, #e35a5a 100%
+  );
 }
 
 .team-score {
@@ -76,20 +81,6 @@ body {
   justify-content: center;
   gap: 4px;
   padding: 20px 8px;
-}
-
-.team-score.team-a {
-  background: linear-gradient(160deg, #4c86ff, #1f4fb0);
-  clip-path: polygon(0 0, 100% 0, 88% 100%, 0 100%);
-  -webkit-clip-path: polygon(0 0, 100% 0, 88% 100%, 0 100%);
-  padding-right: 8%;
-}
-
-.team-score.team-b {
-  background: linear-gradient(160deg, #e35a5a, #a11f1f);
-  clip-path: polygon(12% 0, 100% 0, 100% 100%, 0 100%);
-  -webkit-clip-path: polygon(12% 0, 100% 0, 100% 100%, 0 100%);
-  padding-left: 8%;
 }
 
 .scoreboard-badge {
@@ -373,11 +364,11 @@ main#app.fade-in {
   margin: 0;
   padding: 3px 9px;
   background: transparent;
-  border: 1px solid #e8b93e;
+  border: 1px solid #5b7cfa;
   border-radius: 6px;
   font-size: 0.7rem;
   font-weight: 700;
-  color: #e8b93e;
+  color: #5b7cfa;
 }
 
 .match-thru[hidden] {
@@ -426,11 +417,11 @@ main#app.fade-in {
   display: block;
   width: 100%;
   background: transparent;
-  color: #e8b93e;
-  border: 1px solid #e8b93e;
+  color: #5b7cfa;
+  border: 1px solid #5b7cfa;
   border-radius: 8px;
   padding: 10px;
-  font-weight: 700;
+  font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.03em;
   font-size: 0.85rem;
@@ -439,13 +430,13 @@ main#app.fade-in {
 }
 
 .match-toggle:active {
-  background-color: rgba(232, 185, 62, 0.12);
+  background-color: rgba(91, 124, 250, 0.12);
   transform: scale(0.96);
   filter: brightness(0.9);
 }
 
 .match-toggle:focus-visible {
-  outline: 2px solid #e8b93e;
+  outline: 2px solid #5b7cfa;
   outline-offset: 2px;
 }
 
