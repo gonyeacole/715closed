@@ -258,7 +258,7 @@ function handleScoreChange(day, matchType, holeIndex, player, rawValue) {
 // After a brief pause (long enough to type a two-digit score), moves focus
 // to the next player's box for the same hole — so entering scores down a
 // column doesn't require tapping each field by hand.
-const AUTO_ADVANCE_DELAY = 500;
+const AUTO_ADVANCE_DELAY = 250;
 
 function holeInput(day, matchType, holeIndex, player, value, inputRefs, nextPlayer) {
   const input = document.createElement('input');
