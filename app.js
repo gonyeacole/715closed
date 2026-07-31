@@ -368,11 +368,16 @@ function appendTotalCells(row, holesSubset, totalsRefs, player) {
 }
 
 function appendResultSpacerCells(resultRow, holesSubset) {
+  const makeSpacer = () => {
+    const td = document.createElement('td');
+    td.className = 'total-cell';
+    return td;
+  };
   if (holesSubset === FRONT) {
-    resultRow.appendChild(document.createElement('td'));
+    resultRow.appendChild(makeSpacer());
   } else if (holesSubset === BACK) {
-    resultRow.appendChild(document.createElement('td'));
-    resultRow.appendChild(document.createElement('td'));
+    resultRow.appendChild(makeSpacer());
+    resultRow.appendChild(makeSpacer());
   }
 }
 

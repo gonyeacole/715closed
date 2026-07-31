@@ -421,7 +421,7 @@ table.holes th {
   border-bottom: 1px solid var(--border);
 }
 
-table.holes tr.player-row.zebra td:not(.player-label) {
+table.holes tr.player-row.zebra td:not(.player-label):not(.total-cell) {
   background: #f6f8fb;
 }
 
