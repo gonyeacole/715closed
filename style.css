@@ -232,6 +232,19 @@ main {
   padding: 0 16px;
 }
 
+main#app.fade-in {
+  animation: app-fade-in 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes app-fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  main#app.fade-in { animation: none; }
+}
+
 .match-card {
   background: var(--card);
   border: 1px solid var(--border);
@@ -393,13 +406,24 @@ main {
   outline-offset: 2px;
 }
 
-.match-body {
-  display: none;
-  margin-top: 14px;
+.match-body-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.match-card.expanded .match-body {
-  display: block;
+.match-card.expanded .match-body-wrap {
+  grid-template-rows: 1fr;
+}
+
+.match-body {
+  overflow: hidden;
+  min-height: 0;
+  padding-top: 14px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .match-body-wrap { transition: none; }
 }
 
 .nine-block {

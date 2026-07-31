@@ -540,8 +540,11 @@ function buildMatchCardShell(title, subtitleHtml, sideANames, sideBNames) {
   toggleBtn.className = 'match-toggle';
   toggleBtn.textContent = 'Score this match';
 
+  const bodyWrap = document.createElement('div');
+  bodyWrap.className = 'match-body-wrap';
   const body = document.createElement('div');
   body.className = 'match-body';
+  bodyWrap.appendChild(body);
 
   toggleBtn.addEventListener('click', () => {
     const expanded = card.classList.toggle('expanded');
@@ -551,7 +554,7 @@ function buildMatchCardShell(title, subtitleHtml, sideANames, sideBNames) {
   card.appendChild(header);
   card.appendChild(scoreline);
   card.appendChild(toggleBtn);
-  card.appendChild(body);
+  card.appendChild(bodyWrap);
 
   return { card, body, spanA, spanB, liveBadge, thruText };
 }
@@ -608,6 +611,10 @@ function renderMain() {
   app.appendChild(sgShell.card);
 
   refreshDerived(day);
+
+  app.classList.remove('fade-in');
+  void app.offsetWidth;
+  app.classList.add('fade-in');
 }
 
 // Updates each player's OUT/IN/TOT total cells for the currently visible
