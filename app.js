@@ -369,8 +369,9 @@ function buildBestBallTable(day, holesSubset, startIdx, resultCellRefs, inputRef
   table.appendChild(headRow);
   table.appendChild(buildParRow(day, holesSubset, startIdx));
 
-  players.forEach((p) => {
+  players.forEach((p, playerIdx) => {
     const row = document.createElement('tr');
+    row.className = 'player-row' + (playerIdx % 2 === 1 ? ' zebra' : '');
     const label = document.createElement('td');
     const team = day.bestBall.teamA.includes(p) ? 'A' : 'B';
     label.className = 'player-label ' + (team === 'A' ? 'label-team-a' : 'label-team-b');
@@ -417,8 +418,9 @@ function buildSinglesTable(day, holesSubset, startIdx, resultCellRefs, inputRefs
   table.appendChild(headRow);
   table.appendChild(buildParRow(day, holesSubset, startIdx));
 
-  players.forEach((p) => {
+  players.forEach((p, playerIdx) => {
     const row = document.createElement('tr');
+    row.className = 'player-row' + (playerIdx % 2 === 1 ? ' zebra' : '');
     const label = document.createElement('td');
     let labelClass = 'label-jov';
     if (p === day.singles.a) labelClass = 'label-team-a';

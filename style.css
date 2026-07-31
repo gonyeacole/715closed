@@ -351,9 +351,10 @@ table.holes {
 }
 
 table.holes th, table.holes td {
-  border: 1px solid var(--border);
+  border: none;
+  border-bottom: 1px solid var(--border);
   text-align: center;
-  padding: 4px 2px;
+  padding: 5px 2px;
 }
 
 table.holes th {
@@ -361,6 +362,11 @@ table.holes th {
   color: var(--navy-dark);
   font-weight: 600;
   font-size: 0.72rem;
+  border-bottom: 1px solid var(--border);
+}
+
+table.holes tr.player-row.zebra td:not(.player-label) {
+  background: #f6f8fb;
 }
 
 table.holes td.player-label, table.holes th.player-label {
