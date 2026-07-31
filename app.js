@@ -799,7 +799,7 @@ function renderScoreboard() {
     beerEvents.forEach((ev) => {
       const item = document.createElement('div');
       item.className = 'beer-item';
-      item.textContent = `${ev.day.name} (${ev.day.course}), Hole ${ev.hole}: Jov beat both ${ev.a} and ${ev.b} — shotgun time.`;
+      item.textContent = `${ev.day.name} (${ev.day.course}), Hole ${ev.hole}: Jov beat both ${ev.a} and ${ev.b}. Shotgun time!`;
       beerList.appendChild(item);
     });
   }
