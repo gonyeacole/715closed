@@ -354,30 +354,6 @@ table.holes th, table.holes td {
   border: 1px solid var(--border);
   text-align: center;
   padding: 4px 2px;
-  position: relative;
-}
-
-td.stroke-1::after,
-td.stroke-2::after {
-  content: '';
-  position: absolute;
-  top: 3px;
-  right: 3px;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--push);
-}
-
-td.stroke-2::before {
-  content: '';
-  position: absolute;
-  top: 3px;
-  right: 10px;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--push);
 }
 
 table.holes th {

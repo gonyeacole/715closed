@@ -13,46 +13,6 @@ const TEAMS = {
   B: ['Cole', 'Scarr', 'Jordy'],
 };
 
-const PLAYER_HANDICAPS = {
-  Pete: 9.4,
-  Shane: 15.8,
-  Bush: 15.2,
-  Cole: 9.3,
-  Scarr: 10.7,
-  Jordy: 28,
-};
-
-function roundedHandicap(name) {
-  return Math.round(PLAYER_HANDICAPS[name]);
-}
-
-// Relative handicap allocation: the lowest handicap among the players in a
-// given match plays scratch, everyone else gets the full difference.
-function matchStrokes(players) {
-  const rounded = players.map(roundedHandicap);
-  const min = Math.min(...rounded);
-  const strokes = {};
-  players.forEach((p, i) => {
-    strokes[p] = rounded[i] - min;
-  });
-  return strokes;
-}
-
-// How many of a player's total match strokes land on a given hole, using
-// that hole's difficulty rank (1 = hardest). Strokes beyond 18 wrap around
-// onto the hardest holes again.
-function strokesOnHole(totalStrokes, rank) {
-  const base = Math.floor(totalStrokes / 18);
-  const remainder = totalStrokes % 18;
-  return base + (rank <= remainder ? 1 : 0);
-}
-
-function strokesSummaryText(strokes) {
-  const entries = Object.entries(strokes).filter(([, v]) => v > 0);
-  if (entries.length === 0) return '';
-  return 'Strokes: ' + entries.map(([p, v]) => `${p} +${v}`).join(' &middot; ');
-}
-
 const DAYS = [
   {
     id: 1,
@@ -61,7 +21,6 @@ const DAYS = [
     bestBall: { teamA: ['Pete', 'Shane'], teamB: ['Jordy', 'Cole'] },
     singles: { a: 'Bush', b: 'Scarr' },
     par: [4, 4, 5, 4, 4, 3, 5, 3, 4, 4, 4, 3, 4, 5, 4, 5, 3, 4],
-    strokeIndex: [7, 11, 1, 13, 5, 15, 3, 17, 9, 10, 14, 18, 12, 2, 6, 4, 16, 8],
   },
   {
     id: 2,
@@ -70,7 +29,6 @@ const DAYS = [
     bestBall: { teamA: ['Pete', 'Bush'], teamB: ['Cole', 'Scarr'] },
     singles: { a: 'Shane', b: 'Jordy' },
     par: [4, 3, 5, 3, 5, 3, 4, 4, 4, 4, 3, 4, 4, 4, 4, 4, 3, 5],
-    strokeIndex: [13, 17, 1, 15, 9, 11, 5, 7, 3, 16, 12, 10, 6, 14, 2, 8, 18, 4],
   },
   {
     id: 3,
@@ -79,14 +37,8 @@ const DAYS = [
     bestBall: { teamA: ['Shane', 'Bush'], teamB: ['Scarr', 'Jordy'] },
     singles: { a: 'Pete', b: 'Cole' },
     par: [4, 3, 5, 3, 4, 4, 5, 4, 4, 4, 3, 4, 5, 4, 4, 4, 3, 4],
-    strokeIndex: [11, 15, 1, 17, 7, 5, 3, 9, 13, 4, 16, 8, 6, 12, 14, 2, 18, 10],
   },
 ];
-
-DAYS.forEach((day) => {
-  day.bestBall.strokes = matchStrokes([...day.bestBall.teamA, ...day.bestBall.teamB]);
-  day.singles.strokes = matchStrokes([day.singles.a, day.singles.b]);
-});
 
 const STORAGE_KEY = 'closed715-tournament-v1';
 const HOLES = Array.from({ length: 18 }, (_, i) => i + 1);
@@ -210,16 +162,9 @@ function numOrNull(v) {
   return Number.isFinite(n) ? n : null;
 }
 
-// strokes maps each player to their total handicap strokes for this match
-// (see matchStrokes); rank is the hole's difficulty rank (1 = hardest) used
-// to decide whether a stroke lands on this particular hole.
-function bestBallHoleResult(holeData, teamAPlayers, teamBPlayers, strokes, rank) {
-  const netFor = (p) => {
-    const raw = numOrNull(holeData[p]);
-    return raw === null ? null : raw - strokesOnHole(strokes[p], rank);
-  };
-  const aVals = teamAPlayers.map(netFor).filter((v) => v !== null);
-  const bVals = teamBPlayers.map(netFor).filter((v) => v !== null);
+function bestBallHoleResult(holeData, teamAPlayers, teamBPlayers) {
+  const aVals = teamAPlayers.map((p) => numOrNull(holeData[p])).filter((v) => v !== null);
+  const bVals = teamBPlayers.map((p) => numOrNull(holeData[p])).filter((v) => v !== null);
   if (aVals.length === 0 || bVals.length === 0) return { status: 'pending', aPts: 0, bPts: 0 };
   const aScore = Math.min(...aVals);
   const bScore = Math.min(...bVals);
@@ -228,24 +173,18 @@ function bestBallHoleResult(holeData, teamAPlayers, teamBPlayers, strokes, rank)
   return { status: 'halve', aPts: 0.5, bPts: 0.5, aScore, bScore };
 }
 
-function singlesHoleResult(holeData, playerA, playerB, strokes, rank) {
+function singlesHoleResult(holeData, playerA, playerB) {
   const rawA = numOrNull(holeData[playerA]);
   const rawB = numOrNull(holeData[playerB]);
   const rawJov = numOrNull(holeData['Jov']);
   if (rawA === null || rawB === null) return { status: 'pending', aPts: 0, bPts: 0 };
-  // The push/beer rule stays gross-vs-gross: it's a fun penalty for being
-  // outplayed outright, not part of the handicap-adjusted match result.
   if (rawJov !== null && rawJov < rawA && rawJov < rawB) {
     return { status: 'push-beer', aPts: 0, bPts: 0 };
   }
-  const netA = rawA - strokesOnHole(strokes[playerA], rank);
-  const netB = rawB - strokesOnHole(strokes[playerB], rank);
-  // Jov has no handicap (he's a scratch fallback), so his raw score is used
-  // as-is when he'd be a better net option than the player's own net score.
-  const effA = rawJov !== null ? Math.min(netA, rawJov) : netA;
-  const effB = rawJov !== null ? Math.min(netB, rawJov) : netB;
-  if (effA < effB) return { status: 'a', aPts: 1, bPts: 0, usedJovA: rawJov !== null && rawJov < netA };
-  if (effB < effA) return { status: 'b', aPts: 0, bPts: 1, usedJovB: rawJov !== null && rawJov < netB };
+  const effA = rawJov !== null ? Math.min(rawA, rawJov) : rawA;
+  const effB = rawJov !== null ? Math.min(rawB, rawJov) : rawB;
+  if (effA < effB) return { status: 'a', aPts: 1, bPts: 0, usedJovA: rawJov !== null && rawJov < rawA };
+  if (effB < effA) return { status: 'b', aPts: 0, bPts: 1, usedJovB: rawJov !== null && rawJov < rawB };
   return { status: 'halve', aPts: 0.5, bPts: 0.5 };
 }
 
@@ -256,13 +195,13 @@ function computeTotals() {
 
   DAYS.forEach((day) => {
     const dayState = state.days[day.id];
-    dayState.bestBall.holes.forEach((holeData, idx) => {
-      const r = bestBallHoleResult(holeData, day.bestBall.teamA, day.bestBall.teamB, day.bestBall.strokes, day.strokeIndex[idx]);
+    dayState.bestBall.holes.forEach((holeData) => {
+      const r = bestBallHoleResult(holeData, day.bestBall.teamA, day.bestBall.teamB);
       teamA += r.aPts;
       teamB += r.bPts;
     });
     dayState.singles.holes.forEach((holeData, idx) => {
-      const r = singlesHoleResult(holeData, day.singles.a, day.singles.b, day.singles.strokes, day.strokeIndex[idx]);
+      const r = singlesHoleResult(holeData, day.singles.a, day.singles.b);
       teamA += r.aPts;
       teamB += r.bPts;
       if (r.status === 'push-beer') {
@@ -410,14 +349,6 @@ function appendTotalCells(row, holesSubset, totalsRefs, player) {
   }
 }
 
-// Marks a hole cell with a small dot (two dots if 2+ strokes) showing that
-// a player receives a handicap stroke on that hole.
-function applyStrokeMarker(td, totalStrokes, rank) {
-  const count = strokesOnHole(totalStrokes, rank);
-  if (count === 1) td.classList.add('stroke-1');
-  else if (count >= 2) td.classList.add('stroke-2');
-}
-
 function appendResultSpacerCells(resultRow, holesSubset) {
   if (holesSubset === FRONT) {
     resultRow.appendChild(document.createElement('td'));
@@ -450,7 +381,6 @@ function buildBestBallTable(day, holesSubset, startIdx, resultCellRefs, inputRef
       const td = document.createElement('td');
       const holeData = state.days[day.id].bestBall.holes[idx];
       td.appendChild(holeInput(day, 'bestBall', idx, p, holeData[p], inputRefs));
-      applyStrokeMarker(td, day.bestBall.strokes[p], day.strokeIndex[idx]);
       row.appendChild(td);
     });
     appendTotalCells(row, holesSubset, totalsRefs, p);
@@ -501,7 +431,6 @@ function buildSinglesTable(day, holesSubset, startIdx, resultCellRefs, inputRefs
       const td = document.createElement('td');
       const holeData = state.days[day.id].singles.holes[idx];
       td.appendChild(holeInput(day, 'singles', idx, p, holeData[p], inputRefs));
-      applyStrokeMarker(td, day.singles.strokes[p] || 0, day.strokeIndex[idx]);
       row.appendChild(td);
     });
     appendTotalCells(row, holesSubset, totalsRefs, p);
@@ -623,7 +552,7 @@ function renderMain() {
   // Best ball card
   const bbShell = buildMatchCardShell(
     'Best Ball',
-    strokesSummaryText(day.bestBall.strokes),
+    '',
     day.bestBall.teamA,
     day.bestBall.teamB
   );
@@ -639,9 +568,12 @@ function renderMain() {
   app.appendChild(bbShell.card);
 
   // Singles card
-  const sgHandicapText = strokesSummaryText(day.singles.strokes);
-  const sgSubtitle = ['Jov can back up either player', sgHandicapText].filter(Boolean).join(' &mdash; ');
-  const sgShell = buildMatchCardShell('Singles', sgSubtitle, [day.singles.a], [day.singles.b]);
+  const sgShell = buildMatchCardShell(
+    'Singles',
+    'Jov can back up either player',
+    [day.singles.a],
+    [day.singles.b]
+  );
   refs.singlesSummary = sgShell;
   const sgFront = document.createElement('div');
   sgFront.className = 'nine-block';
@@ -744,7 +676,7 @@ function refreshDerived(day) {
   let bbCompleted = 0;
   let bbAny = false;
   state.days[day.id].bestBall.holes.forEach((holeData, idx) => {
-    const r = bestBallHoleResult(holeData, day.bestBall.teamA, day.bestBall.teamB, day.bestBall.strokes, day.strokeIndex[idx]);
+    const r = bestBallHoleResult(holeData, day.bestBall.teamA, day.bestBall.teamB);
     bbA += r.aPts;
     bbB += r.bPts;
     if (r.status !== 'pending') bbCompleted += 1;
@@ -765,7 +697,7 @@ function refreshDerived(day) {
   let sgCompleted = 0;
   let sgAny = false;
   state.days[day.id].singles.holes.forEach((holeData, idx) => {
-    const r = singlesHoleResult(holeData, day.singles.a, day.singles.b, day.singles.strokes, day.strokeIndex[idx]);
+    const r = singlesHoleResult(holeData, day.singles.a, day.singles.b);
     sgA += r.aPts;
     sgB += r.bPts;
     if (r.status !== 'pending') sgCompleted += 1;
