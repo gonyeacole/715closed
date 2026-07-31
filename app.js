@@ -1,3 +1,5 @@
+document.addEventListener('touchstart', () => {}, { passive: true });
+
 const firebaseConfig = {
   apiKey: 'AIzaSyC9X3Y9xi_nVJCCaaChAT5v-o2fIVuITIM',
   authDomain: 'closed2026-e85d4.firebaseapp.com',

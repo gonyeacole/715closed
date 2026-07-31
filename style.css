@@ -41,7 +41,7 @@
   --card: #ffffff;
 }
 
-* { box-sizing: border-box; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 body {
   margin: 0;
@@ -202,7 +202,12 @@ body {
   font-weight: 600;
   color: var(--ink);
   font-size: 0.85rem;
-  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), filter 0.25s ease;
+}
+
+.day-tab:active {
+  transform: scale(0.96);
+  filter: brightness(0.96);
 }
 
 .day-tab + .day-tab {
