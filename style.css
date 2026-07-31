@@ -180,6 +180,7 @@ body {
   font-weight: 600;
   color: var(--ink);
   font-size: 0.85rem;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .day-tab + .day-tab {
@@ -211,6 +212,7 @@ main {
   padding: 14px;
   margin-top: 16px;
   margin-bottom: 16px;
+  box-shadow: 0 1px 2px rgba(16, 29, 53, 0.04), 0 4px 14px rgba(16, 29, 53, 0.06);
 }
 
 .match-header {
@@ -347,10 +349,12 @@ main {
   font-weight: 600;
   font-size: 0.85rem;
   cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.1s ease;
 }
 
 .match-toggle:active {
   background: var(--navy-dark);
+  transform: scale(0.98);
 }
 
 .match-toggle:focus-visible {
@@ -492,6 +496,7 @@ tr.result-row td {
   border: 1px solid #f0dfa6;
   border-radius: 10px;
   padding: 14px;
+  box-shadow: 0 1px 2px rgba(16, 29, 53, 0.04), 0 4px 14px rgba(16, 29, 53, 0.06);
 }
 
 .beer-tracker h2 { margin: 0 0 4px; font-size: 1rem; }
@@ -530,9 +535,10 @@ footer {
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.1s ease;
 }
 
-.reset-btn:active { background: #fdecec; }
+.reset-btn:active { background: #fdecec; transform: scale(0.97); }
 
 .refresh-btn {
   background: #fff;
@@ -542,9 +548,10 @@ footer {
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.1s ease;
 }
 
-.refresh-btn:active { background: var(--navy-light); }
+.refresh-btn:active { background: var(--navy-light); transform: scale(0.97); }
 
 .footnote {
   font-size: 0.72rem;
