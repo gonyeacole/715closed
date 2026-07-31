@@ -165,7 +165,7 @@ body {
 .day-tabs {
   display: flex;
   gap: 0;
-  padding: 0;
+  padding: 16px 16px 0;
   overflow-x: auto;
 }
 
@@ -528,7 +528,7 @@ tr.result-row td {
 .res-pending { background: #fff; color: #cfd6cf; }
 
 .beer-tracker {
-  margin: 24px 16px 0;
+  margin: 16px 16px 0;
   background: #fff8e6;
   border: 1px solid #f0dfa6;
   border-radius: 10px;
@@ -553,7 +553,7 @@ tr.result-row td {
 
 footer {
   text-align: center;
-  margin-top: 24px;
+  margin-top: 16px;
   padding: 0 16px;
 }
 
