@@ -402,23 +402,22 @@ main#app.fade-in {
 
 table.holes {
   border-collapse: collapse;
+  table-layout: fixed;
   width: 100%;
-  font-size: 0.8rem;
-  min-width: 480px;
 }
 
 table.holes th, table.holes td {
   border: none;
   border-bottom: 1px solid var(--border);
   text-align: center;
-  padding: 5px 2px;
+  padding: 3px 0;
 }
 
 table.holes th {
   background: var(--navy-light);
   color: var(--navy-dark);
   font-weight: 600;
-  font-size: 0.72rem;
+  font-size: 0.62rem;
   border-bottom: 1px solid var(--border);
 }
 
@@ -427,10 +426,14 @@ table.holes tr.player-row.zebra td:not(.player-label) {
 }
 
 table.holes td.player-label, table.holes th.player-label {
+  width: 42px;
   text-align: left;
-  padding-left: 6px;
+  padding-left: 3px;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-weight: 600;
+  font-size: 0.66rem;
   background: #fafbfd;
 }
 
@@ -438,7 +441,7 @@ tr.par-row td {
   background: #eef2f9;
   color: var(--navy-dark);
   font-weight: 600;
-  font-size: 0.72rem;
+  font-size: 0.62rem;
 }
 
 table.holes tr.par-row td.player-label {
@@ -467,12 +470,13 @@ table.holes td.label-jov {
 }
 
 table.holes input {
-  width: 32px;
+  width: 24px;
+  max-width: 100%;
   text-align: center;
   border: 1px solid var(--border);
   border-radius: 4px;
   padding: 3px 0;
-  font-size: 0.82rem;
+  font-size: 0.72rem;
 }
 
 table.holes input:focus {
@@ -505,7 +509,7 @@ table.holes input.score-bogey {
 
 tr.result-row td {
   font-weight: 700;
-  font-size: 0.75rem;
+  font-size: 0.65rem;
 }
 
 .res-a { background: #eaf1ff; color: var(--team-a); }
