@@ -19,7 +19,7 @@ const DAYS = [
   {
     id: 1,
     name: 'Day 1',
-    course: 'Ridge',
+    course: 'Wild Ridge',
     bestBall: { teamA: ['Pete', 'Shane'], teamB: ['Jordy', 'Cole'] },
     singles: { a: 'Bush', b: 'Scarr' },
     par: [4, 4, 5, 4, 4, 3, 5, 3, 4, 4, 4, 3, 4, 5, 4, 5, 3, 4],
@@ -27,7 +27,7 @@ const DAYS = [
   {
     id: 2,
     name: 'Day 2',
-    course: 'Mill',
+    course: 'Mill Run',
     bestBall: { teamA: ['Pete', 'Bush'], teamB: ['Cole', 'Scarr'] },
     singles: { a: 'Shane', b: 'Jordy' },
     par: [4, 3, 5, 3, 5, 3, 4, 4, 4, 4, 3, 4, 4, 4, 4, 4, 3, 5],
@@ -35,7 +35,7 @@ const DAYS = [
   {
     id: 3,
     name: 'Day 3',
-    course: 'Wissota',
+    course: 'Lake Wissota',
     bestBall: { teamA: ['Shane', 'Bush'], teamB: ['Scarr', 'Jordy'] },
     singles: { a: 'Pete', b: 'Cole' },
     par: [4, 3, 5, 3, 4, 4, 5, 4, 4, 4, 3, 4, 5, 4, 4, 4, 3, 4],
