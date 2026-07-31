@@ -543,7 +543,7 @@ function buildMatchCardShell(title, subtitleHtml, sideANames, sideBNames) {
   const toggleBtn = document.createElement('button');
   toggleBtn.type = 'button';
   toggleBtn.className = 'match-toggle';
-  toggleBtn.textContent = 'Score this match';
+  toggleBtn.textContent = 'Show Scorecard';
 
   const body = document.createElement('div');
   body.className = 'match-body';
@@ -551,7 +551,7 @@ function buildMatchCardShell(title, subtitleHtml, sideANames, sideBNames) {
   toggleBtn.addEventListener('click', () => {
     const willExpand = !card.classList.contains('expanded');
     card.classList.toggle('expanded', willExpand);
-    toggleBtn.textContent = willExpand ? 'Hide scorecard' : 'Score this match';
+    toggleBtn.textContent = willExpand ? 'Hide Scorecard' : 'Show Scorecard';
     body.style.maxHeight = willExpand ? body.scrollHeight + 'px' : '0px';
   });
 
