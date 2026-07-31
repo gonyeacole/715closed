@@ -451,7 +451,7 @@ table.holes tr.par-row td.player-label {
 table.holes td.total-cell {
   background: var(--navy-light);
   color: var(--navy-dark);
-  font-weight: 700;
+  font-weight: 600;
   font-size: 0.72rem;
 }
 
