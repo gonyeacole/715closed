@@ -255,14 +255,30 @@ function handleScoreChange(day, matchType, holeIndex, player, rawValue) {
   refreshDerived(day);
 }
 
-function holeInput(day, matchType, holeIndex, player, value, inputRefs) {
+// After a brief pause (long enough to type a two-digit score), moves focus
+// to the next player's box for the same hole — so entering scores down a
+// column doesn't require tapping each field by hand.
+const AUTO_ADVANCE_DELAY = 500;
+
+function holeInput(day, matchType, holeIndex, player, value, inputRefs, nextPlayer) {
   const input = document.createElement('input');
   input.type = 'number';
   input.min = '1';
   input.inputMode = 'numeric';
   input.value = value === undefined || value === null ? '' : value;
+  let advanceTimer = null;
   input.addEventListener('input', (e) => {
     handleScoreChange(day, matchType, holeIndex, player, e.target.value);
+    if (advanceTimer) clearTimeout(advanceTimer);
+    if (nextPlayer && e.target.value !== '') {
+      advanceTimer = setTimeout(() => {
+        const nextInput = inputRefs[`${matchType}|${holeIndex}|${nextPlayer}`];
+        if (nextInput) nextInput.focus();
+      }, AUTO_ADVANCE_DELAY);
+    }
+  });
+  input.addEventListener('blur', () => {
+    if (advanceTimer) clearTimeout(advanceTimer);
   });
   inputRefs[`${matchType}|${holeIndex}|${player}`] = input;
   return input;
@@ -377,11 +393,12 @@ function buildBestBallTable(day, holesSubset, startIdx, resultCellRefs, inputRef
     label.className = 'player-label ' + (team === 'A' ? 'label-team-a' : 'label-team-b');
     label.textContent = p;
     row.appendChild(label);
+    const nextPlayer = players[playerIdx + 1];
     holesSubset.forEach((h, i) => {
       const idx = startIdx + i;
       const td = document.createElement('td');
       const holeData = state.days[day.id].bestBall.holes[idx];
-      td.appendChild(holeInput(day, 'bestBall', idx, p, holeData[p], inputRefs));
+      td.appendChild(holeInput(day, 'bestBall', idx, p, holeData[p], inputRefs, nextPlayer));
       row.appendChild(td);
     });
     appendTotalCells(row, holesSubset, totalsRefs, p);
@@ -428,11 +445,12 @@ function buildSinglesTable(day, holesSubset, startIdx, resultCellRefs, inputRefs
     label.className = 'player-label ' + labelClass;
     label.textContent = p;
     row.appendChild(label);
+    const nextPlayer = players[playerIdx + 1];
     holesSubset.forEach((h, i) => {
       const idx = startIdx + i;
       const td = document.createElement('td');
       const holeData = state.days[day.id].singles.holes[idx];
-      td.appendChild(holeInput(day, 'singles', idx, p, holeData[p], inputRefs));
+      td.appendChild(holeInput(day, 'singles', idx, p, holeData[p], inputRefs, nextPlayer));
       row.appendChild(td);
     });
     appendTotalCells(row, holesSubset, totalsRefs, p);
