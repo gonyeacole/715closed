@@ -362,9 +362,11 @@ main#app.fade-in {
   background: transparent;
   border: 1px solid #5b7cfa;
   border-radius: 6px;
+  box-shadow: 0 0 8px rgba(91, 124, 250, 0.6);
   font-size: 0.7rem;
   font-weight: 700;
-  color: #5b7cfa;
+  text-transform: uppercase;
+  color: #fff;
 }
 
 .match-thru[hidden] {
@@ -413,11 +415,12 @@ main#app.fade-in {
   display: block;
   width: 100%;
   background: transparent;
-  color: #5b7cfa;
+  color: #fff;
   border: 1px solid #5b7cfa;
   border-radius: 8px;
+  box-shadow: 0 0 10px rgba(91, 124, 250, 0.6);
   padding: 10px;
-  font-weight: 500;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.03em;
   font-size: 0.85rem;
