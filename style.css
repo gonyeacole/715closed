@@ -640,34 +640,46 @@ footer {
   flex-wrap: wrap;
 }
 
-.reset-btn {
-  background: #fff;
-  border: 1px solid #d94848;
-  color: #d94848;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-weight: 600;
+.reset-btn, .refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  font-size: 0.68rem;
   cursor: pointer;
-  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), filter 0.25s ease;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), filter 0.25s ease, background-color 0.15s ease;
+}
+
+.btn-icon {
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.reset-btn {
+  border: 1.5px solid #ef5350;
+  color: #ef5350;
+  box-shadow: 0 0 12px rgba(239, 83, 80, 0.35);
 }
 
 .reset-btn:active {
+  background-color: rgba(239, 83, 80, 0.12);
   transform: scale(0.95);
   filter: brightness(0.97);
 }
 
 .refresh-btn {
-  background: #fff;
-  border: 1px solid var(--navy);
-  color: var(--navy);
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), filter 0.25s ease;
+  border: 1.5px solid #5b7cfa;
+  color: #5b7cfa;
+  box-shadow: 0 0 12px rgba(91, 124, 250, 0.35);
 }
 
 .refresh-btn:active {
+  background-color: rgba(91, 124, 250, 0.12);
   transform: scale(0.95);
   filter: brightness(0.97);
 }
