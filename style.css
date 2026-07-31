@@ -345,7 +345,7 @@ main#app.fade-in {
 
 .match-score-chip {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: center;
   gap: 6px;
   font-size: 1.6rem;
