@@ -677,7 +677,7 @@ footer {
   justify-content: center;
   gap: 8px;
   background: transparent;
-  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  border: 1.5px solid #fff;
   color: #fff;
   padding: 10px;
   border-radius: 10px;
