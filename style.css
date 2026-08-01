@@ -152,22 +152,22 @@ body {
 
 .team-score.team-a.leading::before {
   left: 0;
-  width: 106%;
+  width: calc(100% + 9px);
 }
 
 .team-score.team-a.leading::after {
   left: 0;
-  width: 95%;
+  width: calc(100% - 9px);
 }
 
 .team-score.team-b.leading::before {
   right: 0;
-  width: 95%;
+  width: calc(100% - 9px);
 }
 
 .team-score.team-b.leading::after {
   right: 0;
-  width: 106%;
+  width: calc(100% + 9px);
 }
 
 .scoreboard-badge {
