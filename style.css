@@ -120,6 +120,12 @@ body {
   z-index: 1;
 }
 
+.team-score.leading .team-label,
+.team-score.leading .team-points,
+.team-score.leading .team-roster {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.45);
+}
+
 .team-score.team-a.leading {
   border-left: 3px solid #e8b93e;
 }
