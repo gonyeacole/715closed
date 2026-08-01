@@ -789,6 +789,8 @@ function renderScoreboard() {
   document.getElementById('teamBPoints').textContent = fmtPts(teamB);
   document.getElementById('teamALead').hidden = teamA <= teamB;
   document.getElementById('teamBLead').hidden = teamB <= teamA;
+  document.getElementById('teamABox').classList.toggle('leading', teamA > teamB);
+  document.getElementById('teamBBox').classList.toggle('leading', teamB > teamA);
 
   const beerList = document.getElementById('beerList');
   beerList.innerHTML = '';
