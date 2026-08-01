@@ -820,11 +820,11 @@ function applyThemeUI(theme) {
   const icon = document.getElementById('themeToggleIcon');
   const label = document.getElementById('themeToggleLabel');
   if (theme === 'light') {
-    icon.textContent = '☀️';
-    label.textContent = 'Light Mode';
-  } else {
     icon.textContent = '🌙';
-    label.textContent = 'Dark Mode';
+    label.textContent = 'Switch to Dark Mode';
+  } else {
+    icon.textContent = '☀️';
+    label.textContent = 'Switch to Light Mode';
   }
 }
 
