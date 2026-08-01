@@ -72,12 +72,38 @@ body {
 }
 
 .team-score {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 4px;
   padding: 20px 8px;
+}
+
+.lead-badge {
+  position: absolute;
+  top: 8px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--navy-dark);
+  background: #e8b93e;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.lead-badge[hidden] {
+  display: none;
+}
+
+.team-score.team-a .lead-badge {
+  left: 8px;
+}
+
+.team-score.team-b .lead-badge {
+  right: 8px;
 }
 
 .scoreboard-badge {
