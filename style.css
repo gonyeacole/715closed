@@ -117,16 +117,51 @@ body {
 }
 
 .team-score.leading {
-  box-shadow: inset 0 0 0 3px #e8b93e;
   z-index: 1;
 }
 
 .team-score.team-a.leading {
-  clip-path: polygon(0 0, 106% 0, 95% 100%, 0 100%);
+  border-left: 3px solid #e8b93e;
 }
 
 .team-score.team-b.leading {
-  clip-path: polygon(5% 0, 100% 0, 100% 100%, -6% 100%);
+  border-right: 3px solid #e8b93e;
+}
+
+.team-score.leading::before,
+.team-score.leading::after {
+  content: '';
+  position: absolute;
+  height: 3px;
+  background: #e8b93e;
+}
+
+.team-score.leading::before {
+  top: 0;
+}
+
+.team-score.leading::after {
+  bottom: 0;
+}
+
+.team-score.team-a.leading::before {
+  left: 0;
+  width: 106%;
+}
+
+.team-score.team-a.leading::after {
+  left: 0;
+  width: 95%;
+}
+
+.team-score.team-b.leading::before {
+  right: 0;
+  width: 95%;
+}
+
+.team-score.team-b.leading::after {
+  right: 0;
+  width: 106%;
 }
 
 .scoreboard-badge {
