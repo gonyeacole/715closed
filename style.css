@@ -280,7 +280,7 @@ body {
   flex: 1;
   min-width: 100px;
   text-align: center;
-  padding: 16px 8px;
+  padding: 9px 8px;
   border-radius: 0;
   background: var(--navy-darker);
   border: none;
