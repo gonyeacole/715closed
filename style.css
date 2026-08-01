@@ -283,8 +283,7 @@ body {
   padding: 9px 8px;
   border-radius: 0;
   background: var(--navy-darker);
-  border: none;
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid #e8b93e;
   cursor: pointer;
   font-weight: 700;
   text-transform: uppercase;
@@ -292,10 +291,6 @@ body {
   color: #fff;
   font-size: 0.8rem;
   transition: color 0.15s ease, background-color 0.15s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), filter 0.25s ease;
-}
-
-.day-tab:last-child {
-  border-right: none;
 }
 
 .day-tab:active {
