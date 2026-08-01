@@ -817,15 +817,8 @@ document.getElementById('refreshBtn').addEventListener('click', () => {
 const THEME_KEY = 'closed715-theme';
 
 function applyThemeUI(theme) {
-  const icon = document.getElementById('themeToggleIcon');
   const label = document.getElementById('themeToggleLabel');
-  if (theme === 'light') {
-    icon.textContent = '🌙';
-    label.textContent = 'Switch to Dark Mode';
-  } else {
-    icon.textContent = '☀️';
-    label.textContent = 'Switch to Light Mode';
-  }
+  label.textContent = theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode';
 }
 
 applyThemeUI(document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
