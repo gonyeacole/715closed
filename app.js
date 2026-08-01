@@ -791,6 +791,7 @@ function renderScoreboard() {
   document.getElementById('teamBLead').hidden = teamB <= teamA;
   document.getElementById('teamABox').classList.toggle('leading', teamA > teamB);
   document.getElementById('teamBBox').classList.toggle('leading', teamB > teamA);
+  document.getElementById('scoreboard').classList.toggle('has-leader', teamA !== teamB);
 
   const beerList = document.getElementById('beerList');
   beerList.innerHTML = '';

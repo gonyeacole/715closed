@@ -71,6 +71,16 @@ body {
   background: linear-gradient(100deg, var(--team-a) 50%, var(--team-b) 50%);
 }
 
+.scoreboard.has-leader {
+  background: linear-gradient(
+    100deg,
+    var(--team-a) calc(50% - 2px),
+    #e8b93e calc(50% - 2px),
+    #e8b93e calc(50% + 2px),
+    var(--team-b) calc(50% + 2px)
+  );
+}
+
 .team-score {
   position: relative;
   display: flex;
