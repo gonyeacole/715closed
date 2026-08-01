@@ -11,7 +11,13 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="715 Open">
-<link rel="stylesheet" href="style.css?v=32">
+<link rel="stylesheet" href="style.css?v=33">
+<script>
+  (function () {
+    var saved = localStorage.getItem('closed715-theme');
+    if (saved === 'light') document.documentElement.setAttribute('data-theme', 'light');
+  })();
+</script>
 </head>
 <body>
 
@@ -49,6 +55,10 @@
 </section>
 
 <footer>
+  <button id="themeToggleBtn" class="theme-toggle-btn">
+    <span class="btn-icon" id="themeToggleIcon">&#127769;</span>
+    <span id="themeToggleLabel">Dark Mode</span>
+  </button>
   <div class="footer-buttons">
     <button id="refreshBtn" class="refresh-btn"><span class="btn-icon">&#8635;</span>Refresh</button>
     <button id="resetBtn" class="reset-btn"><span class="btn-icon">&#8634;</span>Reset Tournament</button>
@@ -56,6 +66,6 @@
   <p class="footnote">Scores sync automatically across everyone's devices.</p>
 </footer>
 
-<script src="app.js?v=5"></script>
+<script src="app.js?v=6"></script>
 </body>
 </html>

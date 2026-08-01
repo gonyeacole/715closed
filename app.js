@@ -814,6 +814,34 @@ document.getElementById('refreshBtn').addEventListener('click', () => {
   location.reload();
 });
 
+const THEME_KEY = 'closed715-theme';
+
+function applyThemeUI(theme) {
+  const icon = document.getElementById('themeToggleIcon');
+  const label = document.getElementById('themeToggleLabel');
+  if (theme === 'light') {
+    icon.textContent = '☀️';
+    label.textContent = 'Light Mode';
+  } else {
+    icon.textContent = '🌙';
+    label.textContent = 'Dark Mode';
+  }
+}
+
+applyThemeUI(document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
+
+document.getElementById('themeToggleBtn').addEventListener('click', () => {
+  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  const next = isLight ? 'dark' : 'light';
+  if (next === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+  } else {
+    document.documentElement.removeAttribute('data-theme');
+  }
+  localStorage.setItem(THEME_KEY, next);
+  applyThemeUI(next);
+});
+
 document.getElementById('resetBtn').addEventListener('click', () => {
   if (confirm('Reset all scores for the entire tournament? This cannot be undone.')) {
     if (firebaseReady) {
