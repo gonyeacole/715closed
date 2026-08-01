@@ -761,6 +761,7 @@ footer {
 }
 
 :root[data-theme="light"] .theme-toggle-btn {
+  background: #e5e7eb;
   border-color: #000;
   color: var(--ink);
 }
